@@ -1,0 +1,28 @@
+{
+  "name": "astratravel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "node frontend.mjs && node server.mjs",
+    "start": "node server.mjs",
+    "build": "node build.mjs",
+    "build:demo": "node demo.mjs",
+    "prestart": "node frontend.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "motion": "14.12.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.3",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.25.12",
+    "typescript": "5.9.3"
+  }
+}
