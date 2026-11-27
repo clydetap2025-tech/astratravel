@@ -9,9 +9,21 @@ import { tmpdir } from "node:os";
 import { addAiNotes, planRoute, validateRequest } from "./lib/planner.mjs";
 
 const root = dirname(fileURLToPath(import.meta.url));
-// On Vercel the code sits on a read-only disk; only the temp folder is writable (and it does not outlive the instance).
-const dataDir = process.env.ASTRA_DATA_DIR || (process.env.VERCEL ? resolve(tmpdir(), "astratravel") : resolve(root, ".data"));
-await mkdir(dataDir, { recursive: true, mode: 0o700 });
+// Serverless hosts (Vercel) keep the code on a read-only disk: if the data folder cannot be made next to the code,
+// the database goes to the temp folder, which is writable but does not outlive the instance.
+async function prepareDataDir() {
+  const wanted = process.env.ASTRA_DATA_DIR || (process.env.VERCEL ? resolve(tmpdir(), "astratravel") : resolve(root, ".data"));
+  try {
+    await mkdir(wanted, { recursive: true, mode: 0o700 });
+    return wanted;
+  } catch (error) {
+    const fallback = resolve(tmpdir(), "astratravel");
+    console.warn("AstraTravel: cannot use " + wanted + " (" + error.code + "), storing data in " + fallback);
+    await mkdir(fallback, { recursive: true, mode: 0o700 });
+    return fallback;
+  }
+}
+const dataDir = await prepareDataDir();
 const db = new DatabaseSync(resolve(dataDir, "astratravel.sqlite"));
 db.exec(`
   PRAGMA foreign_keys = ON;
@@ -193,6 +205,7 @@ export async function handle(request, response) {
 }
 
 export const server = createServer(handle);
+export default handle;
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const portArg = process.argv.indexOf("--port");
   const hostArg = process.argv.indexOf("--host");
