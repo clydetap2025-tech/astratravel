@@ -21,12 +21,14 @@ const budgetNames = {
 type Props = {
   signedIn: boolean; inputs: PlanInputs; onInput: (inputs: PlanInputs) => void;
   plan: Plan | null; planning: boolean; issue: unknown; aiPending: boolean; aiAvailable: boolean; onPlan: () => void; onAiPlan: () => void;
+  /** Opens the Astra AI chat with this city and the visitor's route. */
+  onAsk: () => void;
   /** Where the live map starts the taxi pickup: the local visitor's district. */
   start?: { x: number; y: number };
 };
 
 /** Route: the visitor's own route first, then a ready-made plan for the days, then (in Almaty) the live map. */
-export function PlannerPage({ signedIn, inputs, onInput, plan, planning, issue, aiPending, aiAvailable, onPlan, onAiPlan, start }: Props) {
+export function PlannerPage({ signedIn, inputs, onInput, plan, planning, issue, aiPending, aiAvailable, onPlan, onAiPlan, onAsk, start }: Props) {
   const { t, language, money, errorText, local, preferences, updatePreferences, saved } = useTravel();
   const labels = useLensLabels();
   const city = tripCity(preferences);
@@ -93,6 +95,7 @@ export function PlannerPage({ signedIn, inputs, onInput, plan, planning, issue, 
             {aiAvailable && <button type="button" className={"button" + (signedIn ? " button-primary" : "")} disabled={planning} onClick={onAiPlan}>
               <Icon name="sparkles" size={17} />{t(planning ? "planning" : signedIn ? "aiButton" : "aiTry")}
             </button>}
+            {aiAvailable && <button type="button" className="button" onClick={onAsk}><Icon name="sparkles" size={17} />{t("askAstra")}</button>}
             {aiPending && <p className="note" role="status"><Icon name="info" size={16} />{t("aiPending")}</p>}
           </div>
         </div>

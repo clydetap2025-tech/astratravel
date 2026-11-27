@@ -2,6 +2,7 @@ import { placeMap } from "../../../data/catalog.js";
 import { useTravel } from "../../shared/context";
 import type { Category, Place } from "../../shared/model";
 import { matchesOf } from "../../shared/model";
+import { askAstra } from "../../pages/AssistantPage";
 import { CategoryIcon, CountryBadge, Heart, Icon, PhotoCredit, PhotoNote, PlaceImage } from "../../shared/ui";
 
 /** The two everyday actions on a place: add it to my route, and mark it as visited. */
@@ -65,6 +66,7 @@ export function PlaceDetail({ place }: { place: Place }) {
       <div className="dialog-actions">
         <a className="button button-primary" href={placeMap(place)} target="_blank" rel="noopener"><Icon name="directions" size={17} />{t("map")}</a>
         {"twogis" in place && place.twogis && <a className="button" href={place.twogis} target="_blank" rel="noopener"><Icon name="external" size={16} />{t("open2gis")}</a>}
+        <button type="button" className="button" onClick={() => askAstra({ placeId: place.id, cityId: place.city })}><Icon name="sparkles" size={16} />{t("askAstra")}</button>
         <Heart pressed={saved.places.includes(place.id)} onClick={() => togglePlace(place)} />
         <a className="text-link" href={place.source} target="_blank" rel="noopener">{t("source")}<Icon name="external" size={14} /></a>
       </div>
