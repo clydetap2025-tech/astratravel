@@ -37,7 +37,7 @@ $$;
 set local role anon;
 select is((select count(*)::int from public.places where city_id = 'test-city'), 1, 'anon sees only published places');
 select is((select count(*)::int from public.profiles), 0, 'anon sees no profiles');
-select is(public.ai_messages_left(), 0, 'anon has no AI messages');
+select throws_ok($$ select public.ai_messages_left() $$, '42501', null, 'anon cannot read the AI limit');
 reset role;
 
 -- 2. A user sees only their own rows and cannot raise their own rights.
