@@ -1,56 +1,26 @@
 import { createServer } from "node:http";
-import { readFile, mkdir } from "node:fs/promises";
-import { createHash, randomBytes, scrypt as deriveKey, timingSafeEqual } from "node:crypto";
-import { promisify } from "node:util";
-import { DatabaseSync } from "node:sqlite";
+import { readFile } from "node:fs/promises";
 import { resolve, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { tmpdir } from "node:os";
 import { addAiNotes, planRoute, validateRequest } from "./lib/planner.mjs";
+import { chatInstructions, streamAnswer, validateChat } from "./lib/chat.mjs";
+import { appSettings, DatabaseError, ipHash, rest, rpc, supabaseConfig, userFromRequest } from "./lib/supabase-server.mjs";
 
 const root = dirname(fileURLToPath(import.meta.url));
-// A local .env (OPENAI_API_KEY, OPENAI_MODEL) is read when present; on Vercel these come from the project's Environment Variables.
+// A local .env (OPENAI_API_KEY, SUPABASE_URL, …) is read when present; on Vercel these come from the project's Environment Variables.
 try {
   process.loadEnvFile(resolve(root, ".env"));
 } catch {}
-// Serverless hosts (Vercel) keep the code on a read-only disk: if the data folder cannot be made next to the code,
-// the database goes to the temp folder, which is writable but does not outlive the instance.
-async function prepareDataDir() {
-  const wanted = process.env.ASTRA_DATA_DIR || (process.env.VERCEL ? resolve(tmpdir(), "astratravel") : resolve(root, ".data"));
-  try {
-    await mkdir(wanted, { recursive: true, mode: 0o700 });
-    return wanted;
-  } catch (error) {
-    const fallback = resolve(tmpdir(), "astratravel");
-    console.warn("AstraTravel: cannot use " + wanted + " (" + error.code + "), storing data in " + fallback);
-    await mkdir(fallback, { recursive: true, mode: 0o700 });
-    return fallback;
-  }
-}
-const dataDir = await prepareDataDir();
-const db = new DatabaseSync(resolve(dataDir, "astratravel.sqlite"));
-db.exec(`
-  PRAGMA foreign_keys = ON;
-  PRAGMA journal_mode = WAL;
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY,
-    username TEXT NOT NULL UNIQUE COLLATE NOCASE,
-    salt TEXT NOT NULL,
-    password_hash TEXT NOT NULL
-  );
-  CREATE TABLE IF NOT EXISTS sessions (
-    token_hash TEXT PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    expires_at INTEGER NOT NULL
-  );
-`);
 
-const scrypt = promisify(deriveKey);
-const sessionLife = 7 * 24 * 3600;
+// Accounts, favourites and the AI limit live in Supabase. Without SUPABASE_URL / SUPABASE_ANON_KEY the site works
+// as before without accounts: everything stays in the browser and the chat says it needs an account.
+const supabase = supabaseConfig();
+const supabaseOrigin = supabase ? new URL(supabase.url).origin : "";
 const securityHeaders = {
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'",
+  "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:" + (supabaseOrigin ? " " + supabaseOrigin : "")
+    + "; connect-src 'self'" + (supabaseOrigin ? " " + supabaseOrigin : "") + "; object-src 'none'; base-uri 'none'; form-action 'self'",
 };
 const types = {
   ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
@@ -58,8 +28,8 @@ const types = {
   ".woff": "font/woff", ".svg": "image/svg+xml", ".txt": "text/plain; charset=utf-8",
   ".png": "image/png", ".woff2": "font/woff2", ".webmanifest": "application/manifest+json; charset=utf-8",
 };
+// A short in-memory guard for the itinerary notes; the chat is limited in the database (consume_ai_message).
 const rateLimits = new Map();
-
 function throttle(key, limit) {
   const now = Date.now();
   for (const [id, entry] of rateLimits) {
@@ -70,38 +40,7 @@ function throttle(key, limit) {
   return ++entry.count > limit;
 }
 
-const hash = (token) => createHash("sha256").update(token).digest("hex");
-const cookieToken = (request) => request.headers.cookie?.match(/(?:^|;\s*)astra_session=([a-f0-9]{64})(?:;|$)/)?.[1];
-
-function sessionFor(request) {
-  const token = cookieToken(request);
-  if (!token) return null;
-  return db.prepare(`
-    SELECT sessions.token_hash AS token, users.username AS username
-    FROM sessions LEFT JOIN users ON users.id = sessions.user_id
-    WHERE token_hash = ? AND expires_at > ?
-  `).get(hash(token), Date.now()) ?? null;
-}
-
-function cookie(request, token, maxAge) {
-  const secure = request.socket?.encrypted || request.headers["x-forwarded-proto"] === "https";
-  return `astra_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure ? "; Secure" : ""}`;
-}
-
-function newSession(request, userId) {
-  const old = cookieToken(request);
-  if (old) db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(hash(old));
-  db.prepare("DELETE FROM sessions WHERE expires_at <= ?").run(Date.now());
-  const token = randomBytes(32).toString("hex");
-  db.prepare("INSERT INTO sessions VALUES (?, ?, ?)").run(hash(token), userId, Date.now() + sessionLife * 1000);
-  return cookie(request, token, sessionLife);
-}
-
-function identity(session) {
-  return { mode: "local", ai: Boolean(process.env.OPENAI_API_KEY), user: session ? { username: session.username } : null };
-}
-
-async function jsonBody(request) {
+async function jsonBody(request, max = 4096) {
   // Vercel's Node runtime may have read the body already and offer it as request.body; the plain server reads the stream.
   let given;
   try {
@@ -111,7 +50,7 @@ async function jsonBody(request) {
   }
   if (given !== undefined) {
     const text = typeof given === "string" || Buffer.isBuffer(given) ? given.toString() : JSON.stringify(given);
-    if (!text || text.length > 4096) return null;
+    if (!text || text.length > max) return null;
     try {
       return JSON.parse(text);
     } catch {
@@ -122,9 +61,9 @@ async function jsonBody(request) {
   const chunks = [];
   for await (const chunk of request) {
     size += chunk.length;
-    if (size <= 4096) chunks.push(chunk);
+    if (size <= max) chunks.push(chunk);
   }
-  if (size > 4096) return null;
+  if (size > max) return null;
   try {
     return JSON.parse(Buffer.concat(chunks));
   } catch {
@@ -140,65 +79,137 @@ function json(response, status, data, headers = {}) {
   response.end(JSON.stringify(data));
 }
 
-async function account(request, response, body, register) {
-  const username = typeof body?.username === "string" ? body.username.trim() : "";
-  const password = typeof body?.password === "string" ? body.password : "";
-  // Names in any script (Cyrillic and Kazakh included), digits, "_" and "-".
-  if (!/^[\p{L}\p{N}_-]{3,24}$/u.test(username) || password.length < 8 || password.length > 128) {
-    return json(response, 400, { error: "invalid_account" });
-  }
-  if (register) {
-    const salt = randomBytes(16).toString("hex");
-    const derived = await scrypt(password, salt, 64);
-    const record = db.prepare("INSERT INTO users (username, salt, password_hash) VALUES (?, ?, ?) ON CONFLICT DO NOTHING")
-      .run(username, salt, derived.toString("hex"));
-    if (!record.changes) return json(response, 409, { error: "name_taken" });
-    return json(response, 201, identity({ username }), { "Set-Cookie": newSession(request, record.lastInsertRowid) });
+function clientIp(request) {
+  // Behind Vercel's proxy the socket (if any) is the proxy; Vercel sets the client address in x-real-ip / x-forwarded-for.
+  const forwarded = process.env.VERCEL ? request.headers["x-real-ip"] || request.headers["x-forwarded-for"]?.split(",")[0].trim() : null;
+  return forwarded || request.socket?.remoteAddress || "unknown";
+}
+
+/** What the browser needs to start: whether accounts and AI are on, and the public Supabase settings. */
+async function sessionInfo(request) {
+  const user = supabase ? await userFromRequest(supabase, request).catch(() => null) : null;
+  return {
+    mode: supabase ? "supabase" : "local",
+    ai: Boolean(process.env.OPENAI_API_KEY),
+    guestChat: Boolean(supabase?.serviceKey && process.env.OPENAI_API_KEY),
+    supabase: supabase ? { url: supabase.url, anonKey: supabase.anonKey } : undefined,
+    user: user ? { id: user.id, email: user.email } : null,
+  };
+}
+
+/** One row per OpenAI call (tokens and errors) for the admin overview. Needs the service role; skipped without it. */
+function logAiRequest(row) {
+  if (!supabase?.serviceKey) return;
+  void rest(supabase, "ai_requests", { service: true, method: "POST", body: row, prefer: "return=minimal" }).catch(() => {});
+}
+
+const limitStatus = { ai_daily_limit: 429, too_many: 429, account_blocked: 403, ai_disabled: 503, not_found: 404, unauthorized: 401 };
+
+/**
+ * /api/chat: check the JWT → take one message from today's allowance in the database (consume_ai_message)
+ * → only then ask OpenAI, streaming the answer as NDJSON lines → store the reply. If OpenAI fails, the message
+ * is given back (refund_ai_message). Guests without an account get a few messages a day per IP.
+ */
+async function chat(request, response) {
+  if (!process.env.OPENAI_API_KEY || !supabase) return json(response, 503, { error: "ai_unavailable" });
+  const body = await jsonBody(request, 24000);
+  const input = validateChat(body);
+  if (!input) return json(response, 400, { error: "invalid_input" });
+  const user = await userFromRequest(supabase, request);
+  if (!user && !(supabase.serviceKey && body.guest === true)) return json(response, 401, { error: "unauthorized" });
+
+  const settings = await appSettings(supabase);
+  const model = typeof settings.ai_model === "string" && /^[a-z0-9.-]{3,40}$/.test(settings.ai_model) ? settings.ai_model : "gpt-5.4-nano";
+  let conversationId = input.conversationId;
+  let messageId = null;
+  let left;
+  let history = input.history;
+  const guestKey = user ? null : ipHash(clientIp(request));
+  try {
+    if (user) {
+      if (!conversationId) {
+        const [created] = await rest(supabase, "ai_conversations", {
+          token: user.token, method: "POST", prefer: "return=representation",
+          body: { title: input.message.slice(0, 80), city_id: input.cityId, place_id: input.placeId },
+        });
+        conversationId = created.id;
+      }
+      const [taken] = await rpc(supabase, "consume_ai_message", { conversation: conversationId, content: input.message }, { token: user.token });
+      left = taken.left;
+      messageId = taken.message_id;
+      // The last turns of this conversation before the new message, oldest first.
+      const rows = await rest(supabase, "ai_messages?select=role,content&conversation_id=eq." + conversationId
+        + "&id=lt." + messageId + "&status=eq.ok&order=id.desc&limit=10", { token: user.token });
+      history = rows.reverse();
+    } else {
+      left = await rpc(supabase, "consume_guest_ai_message", { ip_hash: guestKey }, { service: true });
+    }
+  } catch (error) {
+    if (error instanceof DatabaseError) {
+      return json(response, limitStatus[error.message] ?? 400, { error: error.message, resetsAt: error.hint ?? undefined, conversationId });
+    }
+    throw error;
   }
 
-  const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
-  const derived = await scrypt(password, user?.salt ?? "invalid-account-placeholder", 64);
-  if (!user || !timingSafeEqual(derived, Buffer.from(user.password_hash, "hex"))) {
-    return json(response, 401, { error: "bad_login" });
+  const controller = new AbortController();
+  response.on("close", () => { if (!response.writableFinished) controller.abort(); });
+  let started = false;
+  const send = (data) => {
+    if (!started) {
+      started = true;
+      response.writeHead(200, { ...securityHeaders, "Content-Type": "application/x-ndjson; charset=utf-8", "Cache-Control": "no-store", "X-Accel-Buffering": "no" });
+    }
+    if (!response.writableEnded) response.write(JSON.stringify(data) + "\n");
+  };
+  try {
+    send({ type: "start", conversationId, left });
+    const answer = await streamAnswer({
+      env: process.env, model, instructions: chatInstructions(input), history, message: input.message,
+      signal: controller.signal, onDelta: (text) => send({ type: "delta", text }),
+    });
+    if (!answer.text) throw new Error("openai_empty");
+    if (user) {
+      await rpc(supabase, "save_ai_reply", { conversation: conversationId, content: answer.text, tokens: answer.usage?.output_tokens ?? null }, { token: user.token }).catch(() => {});
+    }
+    logAiRequest({ user_id: user?.id ?? null, model, status: "ok", kind: user ? "chat" : "guest_chat", input_tokens: answer.usage?.input_tokens ?? null, output_tokens: answer.usage?.output_tokens ?? null });
+    send({ type: "done", conversationId, left });
+    response.end();
+  } catch (error) {
+    // OpenAI failed or sent nothing: the message is given back, so it does not count towards the limit.
+    let refunded = false;
+    if (supabase.serviceKey) {
+      if (messageId) refunded = await rpc(supabase, "refund_ai_message", { message: messageId }, { service: true }).then(() => true, () => false);
+      if (guestKey) refunded = await rpc(supabase, "refund_guest_ai_message", { ip_hash: guestKey }, { service: true }).then(() => true, () => false);
+    }
+    logAiRequest({ user_id: user?.id ?? null, model, status: "error", kind: user ? "chat" : "guest_chat", error_code: String(error?.message ?? "error").slice(0, 60) });
+    if (controller.signal.aborted) return response.end();
+    send({ type: "error", error: "ai_unavailable", conversationId, left: refunded ? left + 1 : left });
+    response.end();
   }
-  return json(response, 200, identity(user), { "Set-Cookie": newSession(request, user.id) });
 }
 
 async function api(request, response, path) {
-  const session = sessionFor(request);
-  if (request.method === "GET" && path === "/api/session") return json(response, 200, identity(session));
+  if (request.method === "GET" && path === "/api/session") return json(response, 200, await sessionInfo(request));
   if (request.method !== "POST" || request.headers["sec-fetch-site"] === "cross-site" ||
       request.headers["content-type"]?.split(";")[0] !== "application/json") {
     return json(response, 405, { error: "request_error" });
   }
-  if (path === "/api/plan" && !session) return json(response, 401, { error: "unauthorized" });
-
-  // Behind Vercel's proxy the socket (if any) is the proxy; Vercel sets the client address in x-real-ip / x-forwarded-for.
-  const forwarded = process.env.VERCEL ? request.headers["x-real-ip"] || request.headers["x-forwarded-for"]?.split(",")[0].trim() : null;
-  const ip = forwarded || request.socket?.remoteAddress || "unknown";
-  const isPlan = path === "/api/plan";
-  if (throttle(isPlan ? "plan:" + session.token : "auth:" + ip, isPlan ? 8 : 20)) {
-    return json(response, 429, { error: "too_many" });
-  }
-  const body = await jsonBody(request);
-  if (!body || typeof body !== "object" || Array.isArray(body)) return json(response, 400, { error: "invalid_input" });
-
-  if (path === "/api/demo") {
-    return json(response, 200, identity({ username: null }), { "Set-Cookie": newSession(request, null) });
-  }
-  if (path === "/api/login" || path === "/api/register") {
-    return account(request, response, body, path === "/api/register");
-  }
-  if (path === "/api/logout") {
-    if (session) db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(session.token);
-    return json(response, 200, identity(null), { "Set-Cookie": cookie(request, "", 0) });
-  }
-  if (isPlan) {
+  if (path === "/api/chat") return chat(request, response);
+  if (path === "/api/plan") {
+    const user = supabase ? await userFromRequest(supabase, request) : null;
+    if (!user) return json(response, 401, { error: "unauthorized" });
+    if (throttle("plan:" + user.id, 8)) return json(response, 429, { error: "too_many" });
+    const body = await jsonBody(request);
+    if (!body || typeof body !== "object" || Array.isArray(body)) return json(response, 400, { error: "invalid_input" });
     const prefs = validateRequest(body);
     if (!prefs) return json(response, 400, { error: "invalid_input" });
     const plan = planRoute(prefs);
     if (!plan) return json(response, 422, { error: "no_plan" });
-    return json(response, 200, await addAiNotes(plan, prefs, process.env));
+    const result = await addAiNotes(plan, prefs, process.env);
+    if (process.env.OPENAI_API_KEY) {
+      logAiRequest({ user_id: user.id, model: process.env.OPENAI_MODEL || "gpt-5.4-nano", status: result.mode === "ai" ? "ok" : "error", kind: "plan" });
+    }
+    return json(response, 200, result);
   }
   return json(response, 404, { error: "request_error" });
 }
