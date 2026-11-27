@@ -1,0 +1,112 @@
+/* Accounts, the Astra AI chat and the legal pages. Built from the same glass, buttons and fields as the rest. */
+
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.muted { color: var(--muted); }
+kbd { display: inline-block; min-width: 1.5em; padding: 1px 6px; border-radius: 6px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); font: 600 .74rem/1.4 inherit; text-align: center; }
+
+/* Sign-in dialog */
+.auth-perk { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius-s); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-ink); font-size: .9rem; font-weight: 600; }
+.auth-method { margin: 4px 0 2px; }
+.auth-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.auth-links { display: grid; gap: 8px; width: 100%; }
+
+/* Banner from the admin panel */
+.site-banner { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 12px 18px; color: var(--text); font-size: .92rem; }
+.site-banner .icon { color: var(--accent); flex: none; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 14px; font-size: .86rem; }
+.footer-links a { color: var(--muted); }
+.footer-links a:hover { color: var(--text); }
+
+/* Account page */
+.ai-today { display: flex; align-items: center; gap: 14px; margin: 0 0 24px; padding: 16px 20px; }
+.ai-today > .icon { color: var(--accent); flex: none; }
+.ai-today div { display: grid; gap: 2px; flex: 1; }
+.ai-today small { color: var(--muted); }
+.ai-today[data-low] strong { color: var(--accent-ink); }
+.account-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.account-grid .section { margin: 0; }
+.account-card { display: grid; gap: 14px; margin-bottom: 16px; padding: 20px; }
+.account-card input:not([type="checkbox"]), .account-card textarea { width: 100%; }
+.account-card fieldset { border: 0; margin: 0; padding: 0; }
+.danger-zone h3 { margin: 0; font-size: 1rem; }
+.danger-zone p { margin: 0; color: var(--muted); font-size: .9rem; }
+.button-danger { background: color-mix(in srgb, var(--danger) 16%, transparent); color: var(--danger); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 40%, transparent); }
+.button-danger:hover:not(:disabled) { background: color-mix(in srgb, var(--danger) 24%, transparent); }
+.button-danger:disabled { opacity: .5; cursor: not-allowed; }
+.legal-links { margin-top: 24px; color: var(--muted); font-size: .88rem; }
+.legal-links a { color: inherit; }
+.reset-card { max-width: 440px; }
+@media (max-width: 860px) { .account-grid { grid-template-columns: 1fr; } }
+
+/* Legal pages */
+.legal { max-width: 760px; padding: 28px 32px; }
+.legal h2 { margin: 24px 0 8px; font-size: 1.12rem; }
+.legal h2:first-child { margin-top: 0; }
+.legal p { margin: 0 0 10px; line-height: 1.6; }
+
+/* Astra AI chat */
+.assistant-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 20px; align-items: stretch; min-height: min(70vh, 720px); }
+.assistant-layout:not(:has(.assistant-list)) { grid-template-columns: minmax(0, 1fr); }
+.assistant-list { display: flex; flex-direction: column; gap: 12px; padding: 16px; max-height: 76vh; overflow: auto; }
+.assistant-list-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.assistant-list-head h2 { margin: 0; font-size: 1rem; }
+.assistant-list ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.assistant-thread { display: grid; gap: 2px; width: 100%; padding: 10px 12px; border: 0; border-radius: var(--radius-s); background: none; color: var(--text); text-align: left; cursor: pointer; }
+.assistant-thread strong { overflow: hidden; font-size: .9rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.assistant-thread small { color: var(--muted); font-size: .76rem; }
+.assistant-thread:hover { background: var(--soft); }
+.assistant-thread[aria-current] { background: var(--ink-sheen), var(--ink-glass); color: var(--on-ink); }
+.assistant-thread[aria-current] small { color: inherit; opacity: .75; }
+.assistant-chat { display: flex; flex-direction: column; min-width: 0; padding: 16px; }
+.assistant-chat-head { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-height: 0; }
+.assistant-chat-tools { display: flex; gap: 6px; }
+.assistant-back { display: none; margin-right: auto; }
+.assistant-messages { display: flex; flex: 1; flex-direction: column; gap: 10px; min-height: 280px; max-height: 58vh; overflow-y: auto; padding: 8px 2px 12px; }
+.assistant-hello { display: grid; justify-items: center; gap: 12px; margin: auto; max-width: 460px; padding: 24px 8px; color: var(--muted); text-align: center; }
+.assistant-hello > .icon { color: var(--accent); }
+.assistant-suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.bubble { max-width: min(78%, 620px); padding: 11px 15px; border-radius: 18px; font-size: .95rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.bubble-user { align-self: flex-end; border-bottom-right-radius: 6px; background: var(--ink-sheen), var(--ink-glass); color: var(--on-ink); }
+.bubble-assistant { align-self: flex-start; border-bottom-left-radius: 6px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); color: var(--text); }
+.bubble-failed { opacity: .55; }
+.typing { display: inline-flex; gap: 4px; padding: 4px 0; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: typing 1s infinite ease-in-out; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typing { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .typing i { animation: none; } }
+.chat-error { margin: 0 0 8px; }
+.chat-context { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.chat-context .chip { min-height: 32px; font-size: .82rem; }
+.chip-remove { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-left: 4px; border: 0; border-radius: 50%; background: none; color: inherit; cursor: pointer; }
+.chip-remove:hover { background: var(--soft); }
+.assistant-input { display: grid; gap: 8px; }
+.limit-line { margin: 0; color: var(--muted); font-size: .86rem; font-weight: 600; }
+.limit-line span { font-weight: 500; }
+.limit-line[data-low] { color: var(--accent-ink); }
+.assistant-input-row { display: flex; align-items: flex-end; gap: 8px; }
+.assistant-input-row textarea { flex: 1; min-height: 52px; max-height: 200px; padding: 12px 16px; border: 0; border-radius: 20px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); color: var(--text); font: inherit; resize: vertical; }
+.assistant-input-row textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.char-count { justify-self: end; color: var(--muted); font-size: .76rem; font-variant-numeric: tabular-nums; }
+.char-count[data-over] { color: var(--accent-ink); }
+.limit-card { display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px; }
+.limit-card > .icon { color: var(--accent); flex: none; margin-top: 2px; }
+.limit-card p { margin: 0 0 8px; line-height: 1.5; }
+.limit-countdown { color: var(--muted); font-variant-numeric: tabular-nums; }
+.skeleton-list { display: grid; gap: 8px; }
+.skeleton-list span { display: block; height: 44px; border-radius: var(--radius-s); background: var(--soft); animation: skeleton 1.4s infinite ease-in-out; }
+@keyframes skeleton { 50% { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .skeleton-list span { animation: none; } }
+
+@media (max-width: 760px) {
+  .assistant-layout { grid-template-columns: 1fr; min-height: 0; }
+  .assistant-layout[data-view="chat"] .assistant-list { display: none; }
+  .assistant-layout[data-view="list"] .assistant-chat { display: none; }
+  .assistant-back { display: inline-flex; }
+  .assistant-messages { max-height: none; min-height: 50vh; }
+  .bubble { max-width: 88%; }
+}
+
+/* Long words in page titles (e.g. "Конфиденциальность") wrap instead of running off narrow screens. */
+.page-header h1 { overflow-wrap: anywhere; hyphens: auto; }

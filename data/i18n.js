@@ -1,6 +1,7 @@
 import { locales, localize as l } from "./catalog.js";
+import { accountCopy } from "./i18n-account.js";
 
-export const copy = {
+const baseCopy = {
   places: l("Места", "Орындар", "Explore", "スポット"),
   tickets: l("Билеты", "Билеттер", "Flights", "航空券"),
   saved: l("Избранное", "Таңдаулылар", "Saved", "お気に入り"),
@@ -311,6 +312,9 @@ export const copy = {
   openSaved: l("Открыть", "Ашу", "Open", "開く"),
   navigation: l("Основные разделы", "Негізгі бөлімдер", "Main navigation", "メインナビゲーション"),
 };
+
+/** Every interface text; accounts, chat and admin texts live in i18n-account.js. */
+export const copy = { ...baseCopy, ...accountCopy };
 
 export const tr = (key, language) => copy[key]?.[language] ?? copy[key]?.ru ?? key;
 export const countryName = (code, language) => code === "OTHER"
