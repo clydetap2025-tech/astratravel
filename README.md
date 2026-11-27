@@ -2,7 +2,7 @@
 
 Путеводитель по Казахстану: 17 городов и 90 мест — от Байтерека и мавзолея Ясави до Бозжыры и Баянаула. В Алматы есть подборка тематических кафе для гостей из 13 стран (из Японии — Ramen 77, из Индии — Tandoor и так далее). Интерфейс на русском, казахском, английском и японском.
 
-Всё, кроме ИИ, работает без входа: каталог по городам, свой маршрут, отметки «был(а) здесь», билеты между 17 аэропортами, избранное, готовый план по дням и живая карта Алматы. Заметки ИИ к маршруту доступны после входа.
+Всё, кроме ИИ, работает без входа: каталог по городам, свой маршрут, отметки «был(а) здесь», билеты между 17 аэропортами, избранное, готовый план по дням и живая карта Алматы. После входа (Supabase Auth) избранное, маршрут и настройки синхронизируются между устройствами, доступен чат Astra AI — 15 сообщений в день, — а редакторы и администраторы получают админ-панель (`#admin`).
 
 ## Запуск
 
@@ -16,11 +16,11 @@ npm run build        # Worker для Sites (dist/server)
 npm run build:demo   # самодостаточный public/index.html, открывается с диска
 ```
 
-Сервер хранит хеши паролей и сессии в SQLite в `.data/`.
+Аккаунты, избранное, лимит ИИ и правки каталога хранятся в Supabase (см. ниже). Без переменных Supabase сайт работает как раньше — всё в браузере, вход и чат честно пишут, что недоступны.
 
 ## Vercel
 
-`vercel.json` собирает фронтенд статикой (`scripts/vercel-build.mjs` → `dist/client`), а запросы `/api/*` передаёт функции `api/index.mjs` с тем же обработчиком, что и у `server.mjs`. На Vercel писать можно только во временную папку, поэтому база SQLite (аккаунты и сессии) живёт там и пропадает при перезапуске функции. Для постоянных аккаунтов нужна внешняя база.
+`vercel.json` собирает фронтенд статикой (`scripts/vercel-build.mjs` → `dist/client`), а запросы `/api/*` передаёт функции `api/index.mjs` с тем же обработчиком, что и у `server.mjs`. Переменные окружения задаются в Vercel → Project → Settings → Environment Variables (список — в `.env.example`). В `vercel.json` домен проекта Supabase добавлен в `connect-src` и `img-src` CSP: браузер ходит в Supabase напрямую (вход, синхронизация, фото из Storage). Если проект Supabase другой — замените домен там.
 
 ## Структура
 
@@ -32,15 +32,20 @@ src/
     Splash.tsx     заставка-загрузка (стеклянный логотип), раз за сессию, ~1,5 с
     Dialogs.tsx    содержимое единственного <dialog>: место, рейс, вход, язык, авторы фото
     entry/         точки входа: client (браузер), offline (демо-файл), preview (SSR-разметка)
-  pages/         по файлу на экран: Home, Places, Planner, Tickets, Saved
+  pages/         по файлу на экран: Home, Places, Planner, Tickets, Saved, Assistant (#assistant), Account (#account, #reset), Admin (#admin), Legal (#privacy, #terms)
   features/      части экранов по темам
     places/        шапка города, карточка и окно места, фильтры каталога
     planner/       «Мой маршрут», план по дням, подписи живой карты
     tickets/       карточки рейсов и состояние поиска
     onboarding/    глобус городов и быстрая настройка
-    account/       вход и регистрация
+    account/       вход и регистрация (Supabase Auth)
+    admin/         админ-панель: пользователи, места, общие части
   shared/        общее для всех
     model.ts       типы, хранение на устройстве, API
+    supabase.ts    клиент Supabase в браузере, токен для /api
+    sync.ts        перенос из браузера в аккаунт и запись изменений
+    catalog-sync.ts правки каталога из базы поверх data/*.js
+    database.types.ts типы базы (supabase gen types typescript)
     context.tsx    useTravel(): настройки, переводы, форматирование, действия
     geo.ts         расстояния, город поездки, личные подборки
     parallax.ts    один обработчик прокрутки для параллакса
@@ -57,7 +62,8 @@ src/
 data/            города, места, переводы, рейсы; photos.js и photo-sources.js — фото и их авторы
 lib/             планировщик (общий для браузера и сервера) и Worker
 scripts/         fetch-photos.mjs (фото с Wikimedia Commons), supabase-seed.mjs
-supabase/        миграции и сид
+supabase/        миграции, сид, SQL-тесты, шаблоны писем
+e2e/             сценарии Playwright
 ```
 
 ## Экраны и взаимодействие
@@ -107,20 +113,71 @@ node scripts/fetch-photos.mjs medeu sauran # заменить фото этих 
 
 ## Supabase
 
-Схема для городов, мест, аккаунтов, избранного, сохранённых маршрутов и учёта ИИ-запросов лежит в `supabase/migrations/`, данные каталога — в `supabase/seed.sql`.
+### Переменные окружения
+
+| Переменная | Где | Зачем |
+|---|---|---|
+| `SUPABASE_URL` | сервер (отдаётся браузеру) | адрес проекта, `https://<ref>.supabase.co` |
+| `SUPABASE_ANON_KEY` | сервер (отдаётся браузеру) | публичный anon key; права решает RLS |
+| `SUPABASE_SERVICE_ROLE_KEY` | **только сервер** | возврат сообщения при сбое OpenAI, чат без регистрации (3 в день по IP), журнал запросов ИИ |
+| `OPENAI_API_KEY` | только сервер | ответы Astra AI |
+| `OPENAI_MODEL` | сервер, необязательно | модель для заметок к маршруту (для чата модель берётся из настроек в админке) |
+| `GUEST_IP_SALT` | сервер, необязательно | соль для хеша IP гостей |
+
+Ключи не коммитятся: `.env` в `.gitignore`, образец без значений — `.env.example`. В браузер попадают только URL и anon key (через `GET /api/session`).
+
+### Миграции и данные
 
 ```sh
-supabase init
 supabase link --project-ref <ref>
-supabase db push
+supabase db push                       # все файлы supabase/migrations по порядку
+node scripts/supabase-seed.mjs         # пересобрать supabase/seed.sql из data/*.js (идемпотентно, on conflict do update)
 psql "$DATABASE_URL" -f supabase/seed.sql
+supabase test db                       # SQL-тесты политик и лимита (supabase/tests/database)
 ```
 
-Каталог открыт на чтение всем. Таблицы пользователей закрыты RLS: каждый видит и меняет только свои строки. Само приложение пока использует вход из `server.mjs` (SQLite); подключение Supabase Auth — следующий шаг.
+| Миграция | Что делает |
+|---|---|
+| `20261125000100_catalog` | страны, бюджеты, города, места, совпадения по странам |
+| `20261125000200_accounts` | профили, избранное, рейсы, сохранённые планы, RLS «каждый видит своё» |
+| `20261125000300_ai_usage` | учёт запросов к OpenAI |
+| `20261128000100_roles_and_admin` | роли user/editor/admin, блокировка, свой лимит, `app_settings`, `audit_log`, закрытие регистрации |
+| `20261128000200_content_admin` | фото, кредиты, координаты, 2ГИС у мест; редакторы пишут каталог; бакет `place-photos` |
+| `20261128000300_ai_chat_limits` | разговоры и сообщения Astra AI, `ai_messages_left()`, `consume_ai_message()` (атомарно, сутки по Алматы), возврат при сбое, гостевой счётчик |
+| `20261128000400_user_sync_and_admin` | «Мой маршрут» и «был(а) здесь» в аккаунте, удаление аккаунта, функции админ-панели |
+| `20261128000500_fix_profile_guard` | правильный код ошибки у защиты профиля (нашли тесты) |
+
+### Первый администратор
+
+Назначается SQL-командой в Supabase → SQL Editor (кнопки на сайте нет):
+
+```sql
+update public.profiles set role = 'admin'
+where id = (select id from auth.users where email = 'you@example.com');
+```
+
+Редактора — так же, `role = 'editor'`, или из админ-панели (раздел «Пользователи»).
+
+### Как поменять лимит Astra AI
+
+- Для всех: админ-панель → «Настройки» → «Сообщений Astra AI в день» (по умолчанию 15), или SQL:
+  `update public.app_settings set value = '20' where key = 'ai_daily_limit';`
+- Одному человеку: «Пользователи» → иконка ✦ в строке (пусто — «как у всех»).
+- Сутки считаются по Алматы: лимит обновляется в 00:00 (Asia/Almaty). «Сбросить счётчик на сегодня» обнуляет его сразу.
+
+Лимит проверяется в базе (`consume_ai_message` блокирует строку профиля `for update`), до запроса в OpenAI. Если OpenAI не ответил, сообщение возвращается (`refund_ai_message`, только service role).
+
+### Вход: что включить в панели Supabase
+
+1. **Authentication → URL Configuration**: Site URL — адрес сайта (например `https://astratravel.vercel.app`), в Redirect URLs добавить `https://astratravel.vercel.app/**` и `http://localhost:3000/**`.
+2. **Authentication → Providers → Email**: включено, «Confirm email» включено.
+3. **Google**: в Google Cloud Console → APIs & Services → Credentials создать OAuth Client (Web), в Authorized redirect URIs — `https://<ref>.supabase.co/auth/v1/callback`; Client ID и Secret вставить в Supabase → Authentication → Providers → Google.
+4. **Письма на 4 языках**: шаблоны лежат в `supabase/templates` (язык берётся из `language`, который сайт передаёт при регистрации). В панели: Authentication → Email Templates — вставить содержимое `confirmation.html`, `magic_link.html`, `recovery.html`. Для своих писем без ограничений по количеству нужен SMTP (Authentication → SMTP Settings).
+5. **Защита от ботов**: Authentication → Rate Limits (ограничение писем и регистраций выполняется в Supabase, не в памяти сервера); при желании — Attack Protection → CAPTCHA (Turnstile). В форме есть скрытое поле-ловушка.
 
 ## Данные прототипа
 
 - `data/catalog.js` — места Алматы с подбором по стране выезда; `data/kazakhstan.js` — остальные города. Адреса — ориентирами, цена только там, где известна.
 - `data/tickets.js` — демонстрационные рейсы и цены.
-- Избранное, свой маршрут, отметки и настройки хранятся в браузере.
-- ИИ: при `OPENAI_API_KEY` сервер запрашивает заметки к маршруту через Responses API (по умолчанию `gpt-4.1-mini`, меняется `OPENAI_MODEL`). Без ключа карточка ИИ честно пишет, что он недоступен.
+- Без входа избранное, свой маршрут, отметки и настройки хранятся в браузере; после входа — в Supabase (при первом входе всё из браузера переносится в аккаунт).
+- ИИ: при `OPENAI_API_KEY` сервер запрашивает заметки к маршруту через Responses API (по умолчанию `gpt-5.4-nano`, меняется `OPENAI_MODEL`). Без ключа карточка ИИ честно пишет, что он недоступен.

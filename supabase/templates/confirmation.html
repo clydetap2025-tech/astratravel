@@ -1,0 +1,24 @@
+<!-- AstraTravel: confirmation. Paste into Supabase → Authentication → Email Templates.
+     The language comes from the "language" the site sends at sign-up (user metadata); Russian otherwise.
+     Inline styles are fine here: this is an e-mail, not the site (the site's CSP does not apply). -->
+<div style="max-width:520px;margin:0 auto;padding:28px;background:#f6f8fb;border-radius:18px">
+  <p style="margin:0 0 18px;font:700 18px Georgia,serif;color:#0b1220">AstraTravel</p>
+{{ if eq .Data.language "kk" }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">Поштаңызды растаңыз</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">AstraTravel-де тіркелуді аяқтау үшін батырманы басыңыз.</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">Поштаны растау</a></p>
+{{ else }}{{ if eq .Data.language "en" }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">Confirm your e-mail</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">Tap the button to finish signing up for AstraTravel.</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">Confirm e-mail</a></p>
+{{ else }}{{ if eq .Data.language "ja" }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">メールアドレスの確認</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">AstraTravelの登録を完了するには、ボタンを押してください。</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">メールアドレスを確認</a></p>
+{{ else }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">Подтвердите почту</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">Чтобы закончить регистрацию в AstraTravel, нажмите на кнопку.</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">Подтвердить почту</a></p>
+{{ end }}{{ end }}{{ end }}
+  <p style="margin:0;font:12px Arial,sans-serif;color:#64748b">astratravel.vercel.app</p>
+</div>

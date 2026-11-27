@@ -1,0 +1,24 @@
+<!-- AstraTravel: magic_link. Paste into Supabase → Authentication → Email Templates.
+     The language comes from the "language" the site sends at sign-up (user metadata); Russian otherwise.
+     Inline styles are fine here: this is an e-mail, not the site (the site's CSP does not apply). -->
+<div style="max-width:520px;margin:0 auto;padding:28px;background:#f6f8fb;border-radius:18px">
+  <p style="margin:0 0 18px;font:700 18px Georgia,serif;color:#0b1220">AstraTravel</p>
+{{ if eq .Data.language "kk" }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">AstraTravel-ге кіру</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">Кіру үшін батырманы басыңыз. Сілтеме бір рет жұмыс істейді.</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">Кіру</a></p>
+{{ else }}{{ if eq .Data.language "en" }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">Sign in to AstraTravel</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">Tap the button to sign in. The link works once.</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">Sign in</a></p>
+{{ else }}{{ if eq .Data.language "ja" }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">AstraTravelへのログイン</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">ボタンを押してログインしてください。リンクは1回のみ有効です。</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">ログイン</a></p>
+{{ else }}
+  <h1 style="margin:0 0 12px;font:600 22px Georgia,serif;color:#0b1220">Вход в AstraTravel</h1>
+  <p style="margin:0 0 20px;font:15px/1.5 Arial,sans-serif;color:#334155">Нажмите на кнопку, чтобы войти. Ссылка работает один раз.</p>
+  <p style="margin:0 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:#0b1220;color:#fff;font:600 15px Arial,sans-serif;text-decoration:none">Войти</a></p>
+{{ end }}{{ end }}{{ end }}
+  <p style="margin:0;font:12px Arial,sans-serif;color:#64748b">astratravel.vercel.app</p>
+</div>

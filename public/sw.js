@@ -2,7 +2,7 @@
 // Everything is network-first, so a deploy (new bundle, new or replaced photos under the same name)
 // shows up at once; the cache is only the offline fallback. The API is never cached.
 // Bump CACHE when cached files must be dropped on every device (old photos, old bundle).
-const CACHE = "astratravel-v8";
+const CACHE = "astratravel-v9";
 const SHELL = ["/", "/app.js", "/styles.css", "/theme.js", "/manifest.webmanifest", "/assets/astratravel.svg"];
 
 self.addEventListener("install", (event) => {
