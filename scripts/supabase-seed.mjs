@@ -1,6 +1,8 @@
 // Writes supabase/seed.sql from the JavaScript catalog, so data/ stays the single source of truth.
 // Run: node scripts/supabase-seed.mjs
 import { writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { photoCredits } from "../data/photos.js";
 import { budgets, cities, origins, places } from "../data/catalog.js";
 import { travellers } from "../data/travellers.js";
 import { MAP_POINTS } from "../data/map-points.js";
@@ -40,6 +42,24 @@ const sql = [
   "insert into public.place_matches (place_id, country_code) values",
   rows(places.flatMap((place) => ("match" in place ? place.match ?? [] : []).map((code) => [text(place.id), text(code)]))),
   "on conflict do nothing;",
+  "",
+  // Photo credits (data/photos.js), the 2GIS link of eateries and coordinates where the data has them.
+  // Columns from 20261128000200_content_admin.sql; a photo is only linked when it has an author and a licence.
+  "update public.places p set photo_url = v.photo_url, photo_author = v.photo_author, photo_license = v.photo_license,",
+  "  photo_page = v.photo_page, photo_kind = v.photo_kind, twogis_url = v.twogis_url, lat = v.lat, lng = v.lng",
+  "from (values",
+  rows(places.map((place) => {
+    const credit = photoCredits[place.id];
+    const file = existsSync(new URL("../public/assets/" + place.id + ".webp", import.meta.url));
+    const photo = credit && file && credit.author && credit.license;
+    return [text(place.id), photo ? text("/assets/" + place.id + ".webp") : "null::text", photo ? text(credit.author.slice(0, 200)) : "null::text",
+      photo ? text(credit.license.slice(0, 80)) : "null::text", photo && credit.page?.startsWith("https://") ? text(credit.page) : "null::text",
+      photo && ["place", "city", "dish"].includes(credit.kind) ? text(credit.kind) : "null::text",
+      typeof place.twogis === "string" && place.twogis.startsWith("https://") ? text(place.twogis) : "null::text",
+      typeof place.lat === "number" ? place.lat.toFixed(6) + "::numeric" : "null::numeric", typeof place.lng === "number" ? place.lng.toFixed(6) + "::numeric" : "null::numeric"];
+  })),
+  ") as v (id, photo_url, photo_author, photo_license, photo_page, photo_kind, twogis_url, lat, lng)",
+  "where p.id = v.id;",
   "",
   "insert into public.country_points (country_code, lat, lng, sort_order) values",
   rows(travellers.map((item, index) => [text(item.country), item.lat, item.lng, index])),
