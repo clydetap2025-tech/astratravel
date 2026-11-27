@@ -46,6 +46,7 @@ export const copy = {
   removed: l("Убрано из избранного", "Таңдаулылардан өшірілді", "Removed from favourites", "お気に入りから削除しました"),
   map: l("На карте", "Картада", "View on map", "地図で見る"),
   source: l("Источник", "Дереккөз", "Source", "出典"),
+  open2gis: l("Открыть в 2ГИС", "2ГИС-те ашу", "Open in 2GIS", "2GISで開く"),
   duration: l("Время на посещение", "Бару уақыты", "Time to visit", "所要時間"),
   estCost: l("Примерные расходы", "Шамамен шығын", "Estimated cost", "費用の目安"),
   free: l("Бесплатно", "Тегін", "Free", "無料"),

@@ -1,4 +1,5 @@
 import { cities, cityById, landmarks } from "./kazakhstan.js";
+import { eateries } from "./eateries.js";
 
 export { cities, cityById };
 export const languages = { ru: "Русский", kk: "Қазақша", en: "English", ja: "日本語" };
@@ -236,8 +237,8 @@ const almatyPlaces = [
   },
 ];
 
-/** Every place in the guide: the photographed Almaty catalogue first, then landmarks across the country. */
-export const places = [...almatyPlaces.map((place) => ({ ...place, city: "almaty" })), ...landmarks];
+/** Every place in the guide: the photographed Almaty catalogue first, then landmarks across the country, then cafés and restaurants in the other cities. */
+export const places = [...almatyPlaces.map((place) => ({ ...place, city: "almaty" })), ...landmarks, ...eateries];
 
 export const placeById = Object.fromEntries(places.map((place) => [place.id, place]));
 

@@ -64,6 +64,7 @@ export function PlaceDetail({ place }: { place: Place }) {
       <PlaceActions place={place} />
       <div className="dialog-actions">
         <a className="button button-primary" href={placeMap(place)} target="_blank" rel="noopener"><Icon name="directions" size={17} />{t("map")}</a>
+        {"twogis" in place && place.twogis && <a className="button" href={place.twogis} target="_blank" rel="noopener"><Icon name="external" size={16} />{t("open2gis")}</a>}
         <Heart pressed={saved.places.includes(place.id)} onClick={() => togglePlace(place)} />
         <a className="text-link" href={place.source} target="_blank" rel="noopener">{t("source")}<Icon name="external" size={14} /></a>
       </div>
