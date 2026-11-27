@@ -14,7 +14,7 @@
 .hero-title { font-size: clamp(2.8rem, 6.4vw, 5.4rem); line-height: .98; letter-spacing: -.035em; outline: none; }
 .hero-actions { margin-top: 10px; }
 .hero-city { display: grid; gap: 6px; max-width: 26rem; padding: 18px 20px 20px; border-radius: 26px; }
-.hero-city-label { color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.hero-city-label { color: var(--muted); font-size: .86rem; font-weight: 600; }
 .hero-city-select select { min-height: 44px; border-radius: 999px; font-weight: 600; }
 .hero-city-name { display: block; margin-top: 6px; font-family: var(--serif); font-size: 2.1rem; font-weight: 600; line-height: 1.05; letter-spacing: -.02em; }
 .hero-city-region, .hero-city-meta { display: block; color: var(--muted); }
@@ -35,7 +35,7 @@
 .quick-title { font-size: clamp(2rem, 4.6vw, 3.2rem); outline: none; }
 .quick-body { display: grid; gap: 22px; }
 .quick-field { display: grid; gap: 10px; }
-.quick-label { color: var(--muted); font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.quick-label { color: var(--text); font-size: .92rem; font-weight: 600; }
 .quick-who { display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; width: min(100%, 440px); padding: 4px; border-radius: 999px; background: var(--soft); box-shadow: inset 0 1px 3px rgba(10, 20, 40, .1), inset 0 0 0 1px var(--line); }
 .quick-who-option { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; border: 0; border-radius: 999px; background: none; color: var(--muted); font-weight: 600; }
 .quick-who-option[aria-checked="true"] { color: var(--on-ink); }

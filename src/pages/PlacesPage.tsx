@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import { m } from "motion/react";
 import { recommend } from "../../data/catalog.js";
-import { CityBar, CityHeader } from "../features/places/CityHeader";
+import { CityHeader } from "../features/places/CityHeader";
 import { filterPlaces, filters, initialFilters, sorts, ZONES } from "../features/places/catalog";
 import type { PlaceFilters, SortOrder } from "../features/places/catalog";
 import { PlaceCard } from "../features/places/PlaceCard";
 import { useTravel } from "../shared/context";
 import type { Place } from "../shared/model";
 import { spring } from "../shared/motion";
-import { CategoryIcon, EmptyState, GlassIcon, Icon, PageHeader, Section } from "../shared/ui";
+import { CategoryIcon, EmptyState, GlassIcon, Icon, Section } from "../shared/ui";
 
 /**
  * Places: the city header, then the catalogue — search (press / to jump to it), sort, categories
@@ -41,7 +41,6 @@ export function PlacesPage({ filter, onFilter }: { filter: PlaceFilters; onFilte
       <input ref={search} type="search" name="place-search" placeholder={t("search")} autoComplete="off" value={filter.query}
         onChange={(event) => onFilter({ ...filter, query: event.target.value })}
         onKeyDown={(event) => { if (event.key === "Escape") onFilter({ ...filter, query: "" }); }} />
-      <kbd aria-hidden="true">/</kbd>
     </label>
     <label className="select-wrap with-icon sort-select">
       <Icon name="sort" size={17} />
@@ -54,10 +53,7 @@ export function PlacesPage({ filter, onFilter }: { filter: PlaceFilters; onFilte
   </>;
 
   return <>
-    <CityBar />
-    {city === "all"
-      ? <PageHeader eyebrow={t("region")} title={t("allCities")} lead={t("heroBlurb")} />
-      : <CityHeader key={city} />}
+    <CityHeader />
     <Section id="catalog" className="catalog" title={t(city === "all" ? "allCities" : origin ? "recommendedTitle" : "exploreTitle")} count={results.length} tools={tools}>
       <div className="chips" role="group" aria-label={t("categories")}>
         {filters.map((category) => <button key={category} type="button" className="chip" aria-pressed={filter.category === category}
@@ -69,9 +65,8 @@ export function PlacesPage({ filter, onFilter }: { filter: PlaceFilters; onFilte
       <div aria-live="polite">{results.length ? (grouped ? ZONES.map((zone) => {
         const list = results.filter((place) => zone.match(place.zone));
         if (!list.length) return null;
-        const hours = Math.round(list.reduce((sum, place) => sum + place.minutes, 0) / 60);
         return <section key={zone.key} className="zone" aria-labelledby={"zone-" + zone.key}>
-          <h3 className="zone-title" id={"zone-" + zone.key}>{t(zone.title)}<span>{list.length} · ≈ {hours} {t("hoursShort")}</span></h3>
+          <h3 className="zone-title" id={"zone-" + zone.key}>{t(zone.title)}<span>{list.length}</span></h3>
           <PlaceGrid list={list} />
         </section>;
       }) : <PlaceGrid list={results} />)

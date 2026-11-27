@@ -3,36 +3,23 @@
    the place cards.
    ========================================================================== */
 
-/* City bar: a glass rail of cities. */
-.city-bar { display: flex; gap: 4px; margin: 6px 0 18px; padding: 5px; overflow-x: auto; border-radius: 999px; scrollbar-width: none; scroll-snap-type: x proximity;
-  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
-.city-bar::-webkit-scrollbar { display: none; }
-.city-chip { display: grid; flex: 0 0 auto; padding: 7px 15px 8px; border: 0; border-radius: 999px; background: none; color: var(--muted); text-align: left; scroll-snap-align: start; transition: background-color .2s, color .2s; }
-.city-chip span { font-size: .93rem; font-weight: 600; white-space: nowrap; }
-.city-chip small { font-size: .7rem; font-variant-numeric: tabular-nums; }
-.city-chip:hover { color: var(--text); background: var(--soft); }
-.city-chip[aria-pressed="true"] { background: var(--ink-sheen), var(--ink-glass); box-shadow: var(--ink-rim); color: var(--on-ink); }
-.city-chip:last-child { margin-right: 40px; }
-
-/* City header: the city's photo across the page, drifting with the scroll, glass on top. */
-.city-header { position: relative; display: grid; align-items: end; min-height: clamp(440px, 62vh, 600px); overflow: hidden; isolation: isolate; border-radius: var(--radius-l); box-shadow: var(--glass-drop); }
-.city-header > .city-cover { --depth: 56px; position: absolute; inset: 0; z-index: -1; }
-.city-header::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5, 8, 14, 0) 30%, rgba(5, 8, 14, .38)); pointer-events: none; }
-.city-header-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(240px, .65fr); align-items: end; gap: 16px; padding: 18px; }
-.city-panel { display: grid; gap: 14px; padding: 24px 26px; border-radius: 26px; }
-.city-panel h1 { font-size: clamp(2.8rem, 6.6vw, 5rem); line-height: .95; outline: none; }
-.stats { display: flex; flex-wrap: wrap; gap: 0; }
-.stats > div { display: flex; flex-direction: column-reverse; gap: 2px; padding: 2px 18px 2px 0; margin-right: 18px; border-right: 1px solid var(--line-strong); }
-.stats > div:last-child { border-right: 0; margin-right: 0; }
-.stats dd { font-family: var(--serif); font-size: 1.75rem; font-weight: 600; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.stats dd small { font-family: var(--sans); font-size: .78rem; color: var(--muted); }
-.stats dt { color: var(--muted); font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.progress { display: grid; gap: 6px; max-width: 420px; }
-.progress-text { display: flex; align-items: center; gap: 6px; font-size: .86rem; font-weight: 600; }
-.progress-text .icon { color: var(--accent-ink); }
-.city-panel .actions { margin-top: 2px; }
-.city-map { display: grid; gap: 4px; padding: 14px 14px 10px; border-radius: 26px; }
-.city-map-caption { color: var(--muted); font-size: .8rem; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; }
+/* City stage: the globe switches cities; the chosen city sits beside it. */
+.city-stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: center; gap: clamp(20px, 4vw, 56px); padding: 8px 0 12px; }
+.city-stage-globe { position: relative; display: grid; justify-items: center; gap: 6px; }
+.city-stage-globe .rg { width: min(100%, 560px); aspect-ratio: 1; height: auto; }
+.city-stage-globe .rg__canvas { -webkit-mask-image: radial-gradient(closest-side, #000 76%, transparent); mask-image: radial-gradient(closest-side, #000 76%, transparent); }
+.city-stage-hint { color: var(--muted); font-size: .82rem; text-align: center; }
+.city-stage-info { display: grid; gap: 14px; align-content: center; min-width: 0; }
+.city-select { justify-self: start; width: min(100%, 280px); }
+.city-select select { min-height: 42px; border-radius: 999px; font-weight: 600; }
+.city-photo { aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius); box-shadow: var(--glass-drop); background: var(--cv-b); }
+.city-photo > .parallax-frame { --depth: 28px; width: 100%; height: 100%; }
+.city-stage h1 { font-size: clamp(2.6rem, 5.6vw, 4.4rem); line-height: .98; outline: none; }
+.city-region { font-size: 1.05rem; }
+.city-facts { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: .95rem; }
+.city-facts span { display: inline-flex; align-items: baseline; gap: 5px; }
+.city-facts strong { color: var(--text); font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.city-facts .icon { align-self: center; color: var(--accent-ink); }
 
 /* The map of Kazakhstan with every city. */
 .kz-map { display: block; width: 100%; height: auto; overflow: visible; }
@@ -64,7 +51,7 @@
   position: absolute; display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: .72rem; font-weight: 700;
   background: var(--glass-sheen), var(--glass-strong); -webkit-backdrop-filter: blur(12px) saturate(1.6); backdrop-filter: blur(12px) saturate(1.6); box-shadow: var(--glass-rim);
 }
-.place-tag { top: 10px; left: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.place-tag { top: 10px; left: 10px; }
 .place-tag.is-match { background: var(--ink-sheen), var(--ink-glass); color: var(--on-ink); }
 .place-tag .country-badge { border-color: currentColor; }
 .place-visited { top: 46px; left: 10px; color: var(--accent-ink); }
@@ -102,17 +89,11 @@
 .promo p { margin-top: 4px; }
 
 @media (max-width: 860px) {
-  .city-header { min-height: 0; }
-  .city-header-grid { grid-template-columns: 1fr; padding: 12px; padding-top: 180px; }
-  .city-map { display: none; }
+  .city-stage { grid-template-columns: 1fr; gap: 8px; }
+  .city-stage-globe .rg { width: min(100%, 420px); }
   .promo { grid-template-columns: auto minmax(0, 1fr); }
   .promo .button { grid-column: 1 / -1; }
 }
 @media (max-width: 520px) {
-  .city-panel { padding: 18px; }
-  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .stats > div { padding: 0; margin: 0; border: 0; }
-  .stats dd { font-size: 1.45rem; }
-  .city-panel .actions .button { flex: 1 1 100%; }
-  .city-bar { border-radius: 22px; }
+  .city-stage .actions .button { flex: 1 1 100%; }
 }

@@ -20,6 +20,13 @@
 .logo-glint { fill: none; stroke: var(--text); stroke-width: 2.4; stroke-linecap: round; opacity: .35; }
 .brand:hover .logo-star { transform: rotate(90deg); }
 
+/* Between tablet and laptop the full navbar shares the bar with the actions: keep only icons there. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .site-header .brand > span, .header-language-code, .header-account span { display: none; }
+  .header-account { width: 40px; padding: 0; }
+  .header-inner { gap: 8px; }
+}
+
 /* Footer */
 .site-footer { margin-top: 40px; border-top: 1px solid var(--line); }
 .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; min-height: 88px; padding-block: 16px; }
@@ -54,7 +61,7 @@
 .photo-credit a { color: inherit; }
 .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .facts > div { padding: 12px 14px; border-radius: 16px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
-.facts dt { color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.facts dt { color: var(--muted); font-size: .8rem; font-weight: 600; }
 .facts dd { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-weight: 600; }
 .callout { display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: color-mix(in srgb, var(--accent) 10%, transparent); font-size: .9rem; }
 .callout > .icon { color: var(--accent-ink); }

@@ -35,7 +35,7 @@ kbd { display: inline-grid; place-items: center; min-width: 22px; height: 22px; 
 .page { min-width: 0; }
 
 /* Small type */
-.eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--muted); font-size: .74rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--muted); font-size: .88rem; font-weight: 600; }
 .lead { max-width: 40em; font-size: 1.08rem; }
 .count { margin-left: 10px; color: var(--muted); font-family: var(--sans); font-size: .5em; font-weight: 600; letter-spacing: 0; vertical-align: middle; font-variant-numeric: tabular-nums; }
 .note { display: flex; gap: 8px; color: var(--text); font-size: .86rem; }
