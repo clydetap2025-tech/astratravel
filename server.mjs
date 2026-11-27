@@ -9,6 +9,10 @@ import { tmpdir } from "node:os";
 import { addAiNotes, planRoute, validateRequest } from "./lib/planner.mjs";
 
 const root = dirname(fileURLToPath(import.meta.url));
+// A local .env (OPENAI_API_KEY, OPENAI_MODEL) is read when present; on Vercel these come from the project's Environment Variables.
+try {
+  process.loadEnvFile(resolve(root, ".env"));
+} catch {}
 // Serverless hosts (Vercel) keep the code on a read-only disk: if the data folder cannot be made next to the code,
 // the database goes to the temp folder, which is writable but does not outlive the instance.
 async function prepareDataDir() {

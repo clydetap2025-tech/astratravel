@@ -246,7 +246,7 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
     const controller = new AbortController();
     pendingPlan.current = controller;
     try {
-      const result = await api("plan", { ...inputs, language: preferences.language, origin: preferences.origin, city: tripCity(preferences) }, controller.signal);
+      const result = await api("plan", { ...inputs, language: preferences.language, origin: preferences.origin, visitor: preferences.visitor, district: preferences.district, city: tripCity(preferences) }, controller.signal);
       if (controller.signal.aborted) return;
       setPlan(result);
       setAiPending(result.mode !== "ai");

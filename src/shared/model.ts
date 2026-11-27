@@ -36,7 +36,7 @@ export type AuthAction = "login" | "register" | "demo" | "logout" | "activate";
 export type Credentials = { username: string; password: string };
 type ApiRoutes = {
   session: { input: undefined; output: Session };
-  plan: { input: PlanInputs & Pick<Preferences, "language" | "origin" | "city">; output: Plan };
+  plan: { input: PlanInputs & Pick<Preferences, "language" | "origin" | "visitor" | "district" | "city">; output: Plan };
 } & Record<AuthAction, { input: Credentials | Record<string, never>; output: Session }>;
 export type Api = <Route extends keyof ApiRoutes>(
   route: Route, body: ApiRoutes[Route]["input"], signal?: AbortSignal,
