@@ -80,7 +80,7 @@ function sessionFor(request) {
 }
 
 function cookie(request, token, maxAge) {
-  const secure = request.socket.encrypted || request.headers["x-forwarded-proto"] === "https";
+  const secure = request.socket?.encrypted || request.headers["x-forwarded-proto"] === "https";
   return `astra_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure ? "; Secure" : ""}`;
 }
 
@@ -98,6 +98,22 @@ function identity(session) {
 }
 
 async function jsonBody(request) {
+  // Vercel's Node runtime may have read the body already and offer it as request.body; the plain server reads the stream.
+  let given;
+  try {
+    given = request.body;
+  } catch {
+    return null;
+  }
+  if (given !== undefined) {
+    const text = typeof given === "string" || Buffer.isBuffer(given) ? given.toString() : JSON.stringify(given);
+    if (!text || text.length > 4096) return null;
+    try {
+      return JSON.parse(text);
+    } catch {
+      return null;
+    }
+  }
   let size = 0;
   const chunks = [];
   for await (const chunk of request) {
@@ -153,7 +169,9 @@ async function api(request, response, path) {
   }
   if (path === "/api/plan" && !session) return json(response, 401, { error: "unauthorized" });
 
-  const ip = request.socket.remoteAddress;
+  // Behind Vercel's proxy the socket (if any) is the proxy; Vercel sets the client address in x-real-ip / x-forwarded-for.
+  const forwarded = process.env.VERCEL ? request.headers["x-real-ip"] || request.headers["x-forwarded-for"]?.split(",")[0].trim() : null;
+  const ip = forwarded || request.socket?.remoteAddress || "unknown";
   const isPlan = path === "/api/plan";
   if (throttle(isPlan ? "plan:" + session.token : "auth:" + ip, isPlan ? 8 : 20)) {
     return json(response, 429, { error: "too_many" });
