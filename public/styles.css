@@ -1368,3 +1368,8 @@ body::before { transition: background .8s var(--ease); }
   }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/* Credit line for photos from Wikimedia Commons (author, licence) in the place dialog */
+.photo-credit { margin-top: 14px; color: var(--muted); font-size: .76rem; line-height: 1.45; }
+.photo-credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.photo-credit a:hover { color: var(--text); }

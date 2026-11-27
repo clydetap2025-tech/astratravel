@@ -214,6 +214,10 @@ export function PlaceDetail({ place }: { place: Place }) {
         <Heart pressed={saved.places.includes(place.id)} onClick={() => togglePlace(place)} />
         <a className="source-link" href={place.source} target="_blank" rel="noopener">{t("source")}</a>
       </div>
+      {"credit" in place && place.credit && <p className="photo-credit">
+        {t("photoBy")}: <a href={place.credit.page} target="_blank" rel="noopener">{place.credit.author}</a>,{" "}
+        <a href={place.credit.licenseUrl || place.credit.page} target="_blank" rel="noopener">{place.credit.license}</a> · Wikimedia Commons
+      </p>}
     </div>
   </>;
 }

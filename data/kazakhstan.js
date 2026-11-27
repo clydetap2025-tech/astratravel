@@ -9,6 +9,8 @@
 
 /** @param {string} ru @param {string} kk @param {string} en @param {string} ja */
 const l = (ru, kk, en, ja) => ({ ru, kk, en, ja });
+import { photoCredits } from "./photos.js";
+
 const wiki = (query) => "https://en.wikipedia.org/w/index.php?search=" + encodeURIComponent(query);
 
 export const checkBefore = l(
@@ -65,7 +67,7 @@ export const cityById = Object.fromEntries(cities.map((city) => [city.id, city])
  */
 function p(id, city, category, zone, minutes, cost, title, summary, where, search) {
   return {
-    id, city, category, zone, minutes, cost, photo: false,
+    id, city, category, zone, minutes, cost, photo: Boolean(photoCredits[id]), credit: photoCredits[id] ?? null,
     title: l(...title), summary: l(...summary), address: l(...where), location: cityById[city].name, tip: checkBefore,
     map: search + ", " + cityById[city].name.en + ", Kazakhstan", source: wiki(search),
   };
