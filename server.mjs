@@ -5,25 +5,11 @@ import { promisify } from "node:util";
 import { DatabaseSync } from "node:sqlite";
 import { resolve, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { tmpdir } from "node:os";
 import { addAiNotes, planRoute, validateRequest } from "./lib/planner.mjs";
 
 const root = dirname(fileURLToPath(import.meta.url));
-// Serverless hosts (Vercel) keep the code on a read-only disk: if the data folder cannot be made next to the code,
-// the database goes to the temp folder, which is writable but does not outlive the instance.
-async function prepareDataDir() {
-  const wanted = process.env.ASTRA_DATA_DIR || (process.env.VERCEL ? resolve(tmpdir(), "astratravel") : resolve(root, ".data"));
-  try {
-    await mkdir(wanted, { recursive: true, mode: 0o700 });
-    return wanted;
-  } catch (error) {
-    const fallback = resolve(tmpdir(), "astratravel");
-    console.warn("AstraTravel: cannot use " + wanted + " (" + error.code + "), storing data in " + fallback);
-    await mkdir(fallback, { recursive: true, mode: 0o700 });
-    return fallback;
-  }
-}
-const dataDir = await prepareDataDir();
+const dataDir = process.env.ASTRA_DATA_DIR || resolve(root, ".data");
+await mkdir(dataDir, { recursive: true, mode: 0o700 });
 const db = new DatabaseSync(resolve(dataDir, "astratravel.sqlite"));
 db.exec(`
   PRAGMA foreign_keys = ON;
@@ -80,7 +66,7 @@ function sessionFor(request) {
 }
 
 function cookie(request, token, maxAge) {
-  const secure = request.socket?.encrypted || request.headers["x-forwarded-proto"] === "https";
+  const secure = request.socket.encrypted || request.headers["x-forwarded-proto"] === "https";
   return `astra_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure ? "; Secure" : ""}`;
 }
 
@@ -98,22 +84,6 @@ function identity(session) {
 }
 
 async function jsonBody(request) {
-  // Vercel's Node runtime may have read the body already and offer it as request.body; the plain server reads the stream.
-  let given;
-  try {
-    given = request.body;
-  } catch {
-    return null;
-  }
-  if (given !== undefined) {
-    const text = typeof given === "string" || Buffer.isBuffer(given) ? given.toString() : JSON.stringify(given);
-    if (!text || text.length > 4096) return null;
-    try {
-      return JSON.parse(text);
-    } catch {
-      return null;
-    }
-  }
   let size = 0;
   const chunks = [];
   for await (const chunk of request) {
@@ -169,9 +139,7 @@ async function api(request, response, path) {
   }
   if (path === "/api/plan" && !session) return json(response, 401, { error: "unauthorized" });
 
-  // Behind Vercel's proxy the socket (if any) is the proxy; Vercel sets the client address in x-real-ip / x-forwarded-for.
-  const forwarded = process.env.VERCEL ? request.headers["x-real-ip"] || request.headers["x-forwarded-for"]?.split(",")[0].trim() : null;
-  const ip = forwarded || request.socket?.remoteAddress || "unknown";
+  const ip = request.socket.remoteAddress;
   const isPlan = path === "/api/plan";
   if (throttle(isPlan ? "plan:" + session.token : "auth:" + ip, isPlan ? 8 : 20)) {
     return json(response, 429, { error: "too_many" });
@@ -199,8 +167,7 @@ async function api(request, response, path) {
   return json(response, 404, { error: "request_error" });
 }
 
-/** Handles one request: the API, plus the static files when the app runs as its own server. Vercel calls it through api/index.mjs. */
-export async function handle(request, response) {
+export const server = createServer(async (request, response) => {
   const path = new URL(request.url, "http://localhost").pathname;
   try {
     if (path.startsWith("/api/")) return await api(request, response, path);
@@ -210,7 +177,7 @@ export async function handle(request, response) {
     if (!mime || !/^\/(?:assets\/)?[a-zA-Z0-9_-]+\.[a-z0-9]+$/.test(asset)) {
       return json(response, 404, { error: "request_error" });
     }
-    const file = ["/index.html", "/app.js"].includes(asset) ? "dist/client" + asset : "public" + asset;
+    const file = ["/index.html", "/app.js", "/styles.css"].includes(asset) ? "dist/client" + asset : "public" + asset;
     const content = await readFile(resolve(root, file));
     response.writeHead(200, { ...securityHeaders, "Content-Type": mime, "Cache-Control": "no-cache" });
     response.end(request.method === "HEAD" ? undefined : content);
@@ -220,10 +187,7 @@ export async function handle(request, response) {
     if (!response.headersSent) return json(response, 500, { error: "request_error" });
     response.end();
   }
-}
-
-export const server = createServer(handle);
-export default handle;
+});
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const portArg = process.argv.indexOf("--port");
   const hostArg = process.argv.indexOf("--host");

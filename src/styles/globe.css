@@ -1,0 +1,32 @@
+/* Route Globe (route-globe.tsx) and the layout around it (globe-stage.tsx). */
+.gs { width: 100%; container-type: inline-size; }
+.gs-stage { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.gs-header { width: 100%; }
+.gs-card { width: 100%; max-width: 32rem; }
+.gs-hint { margin-top: 12px; color: var(--muted); font-size: .8rem; }
+.gs-globe { position: relative; flex: 0 0 auto; width: min(100%, 380px); aspect-ratio: 1; }
+@container (min-width: 760px) {
+  .gs-stage { display: grid; grid-template-columns: auto minmax(0, 32rem); justify-content: center; align-items: center; column-gap: clamp(28px, 5vw, 64px); row-gap: 18px; }
+  .gs-header { grid-column: 2; grid-row: 1; align-self: end; }
+  .gs-globe { grid-column: 1; grid-row: 1 / span 2; width: min(48cqw, 540px); }
+  .gs-card { grid-column: 2; grid-row: 2; align-self: start; }
+}
+.rg { position: relative; width: 100%; height: 100%; overflow: hidden; isolation: isolate; touch-action: pan-y pinch-zoom; -webkit-user-select: none; user-select: none; }
+.rg__canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: grab; }
+.rg[data-dragging] .rg__canvas { cursor: grabbing; }
+.rg--pick[data-hover]:not([data-dragging]) .rg__canvas { cursor: pointer; }
+.rg__tag {
+  position: absolute; left: 0; top: 0; z-index: 2; translate: -50% calc(-100% - 12px); padding: 3px 9px; border-radius: 999px;
+  font-size: .74rem; font-weight: 600; line-height: 1.35; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .2s;
+}
+.rg__tag--hub { background: var(--ink-glass); color: var(--on-ink); }
+.rg__tag--active { background: var(--rg-arc); color: #1a1206; }
+.rg__tip {
+  position: absolute; left: 0; top: 0; z-index: 3; display: grid; gap: 1px; padding: 6px 11px; border-radius: 12px;
+  background: var(--glass-strong); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-rim), 0 8px 18px -10px rgba(0, 0, 0, .45);
+  color: var(--text); font-size: .78rem; line-height: 1.3; white-space: nowrap; pointer-events: none;
+}
+.rg__tip[hidden], .rg__tag[hidden] { display: none; }
+.rg__tip strong { font-weight: 600; }
+.rg__tip span { color: var(--muted); font-size: .72rem; font-variant-numeric: tabular-nums; }
+.rg__sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }

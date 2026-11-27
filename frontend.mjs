@@ -18,7 +18,7 @@ const browserConfig = {
 export async function renderHome(assets) {
   await build({
     absWorkingDir: projectRoot,
-    entryPoints: ["src/preview.tsx"],
+    entryPoints: ["src/app/entry/preview.tsx"],
     outfile: "dist/preview.mjs",
     bundle: true,
     jsx: "automatic",
@@ -64,10 +64,19 @@ ${preload ? "  " + preload + "\n" : ""}  ${styles}
 `;
 }
 
+/** src/styles/*.css → dist/client/styles.css (fonts and images under /assets stay as links). */
+export async function bundleStyles() {
+  await build({
+    absWorkingDir: projectRoot, entryPoints: ["src/styles/index.css"], outfile: "dist/client/styles.css",
+    bundle: true, minify: true, external: ["/assets/*"], target: ["chrome111", "safari16.4", "firefox113"], logLevel: "warning",
+  });
+}
+
 export async function bundleClient() {
   const [home] = await Promise.all([
     renderHome(),
-    build({ ...browserConfig, entryPoints: ["src/client.tsx"], outfile: "dist/client/app.js" }),
+    build({ ...browserConfig, entryPoints: ["src/app/entry/client.tsx"], outfile: "dist/client/app.js" }),
+    bundleStyles(),
   ]);
   const html = pageDocument({
     home,
@@ -80,7 +89,7 @@ export async function bundleClient() {
 }
 
 export async function bundleOffline() {
-  const result = await build({ ...browserConfig, entryPoints: ["src/offline.tsx"], write: false });
+  const result = await build({ ...browserConfig, entryPoints: ["src/app/entry/offline.tsx"], write: false });
   return result.outputFiles[0].text;
 }
 

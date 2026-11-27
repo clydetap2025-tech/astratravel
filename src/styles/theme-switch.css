@@ -1,0 +1,17 @@
+/* Theme switch: a glass capsule with a sliding drop. */
+.theme-switch { position: relative; display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; }
+.theme-option { position: relative; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 999px; background: none; color: var(--muted); }
+.theme-option[aria-checked="true"] { color: var(--on-ink); }
+.theme-option:not([aria-checked="true"]):hover { color: var(--text); }
+.theme-drop {
+  position: absolute; inset: 0; z-index: 0; border-radius: 999px;
+  background: var(--ink-glass); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 6px 14px -8px rgba(10, 20, 40, .6);
+}
+.theme-glyph { position: relative; z-index: 1; }
+.theme-option[data-theme-option="light"][aria-checked="true"] .theme-glyph { animation: sun-turn .8s cubic-bezier(.3, 1.4, .5, 1); }
+.theme-option[data-theme-option="dark"][aria-checked="true"] .theme-glyph { animation: moon-swing .9s ease-in-out; transform-origin: 70% 30%; }
+.theme-option[data-theme-option="system"][aria-checked="true"] .theme-glyph { animation: half-flip .7s cubic-bezier(.2, .8, .2, 1); }
+@keyframes sun-turn { from { transform: rotate(-120deg) scale(.6); } to { transform: none; } }
+@keyframes moon-swing { 0% { transform: rotate(-40deg) scale(.7); } 50% { transform: rotate(14deg); } 75% { transform: rotate(-6deg); } 100% { transform: none; } }
+@keyframes half-flip { from { transform: perspective(60px) rotateY(180deg); } to { transform: none; } }
+

@@ -1,0 +1,132 @@
+/* ==========================================================================
+   App chrome: the floating header, the footer, toasts, the dialog and the
+   launch screen.
+   ========================================================================== */
+
+/* Header: a floating glass capsule. */
+.site-header { position: sticky; top: 0; z-index: 10; padding: calc(10px + env(safe-area-inset-top)) 0 0; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 14px; height: 66px; padding: 0 10px 0 14px; border-radius: 999px; transition: height .3s var(--ease), background-color .3s; }
+.site-header[data-scrolled] .header-inner { height: 58px; background: var(--glass-sheen), var(--glass-strong); }
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.header-language-mark { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ink-glass); color: var(--on-ink); font-family: var(--serif); font-size: .7rem; font-weight: 700; }
+.header-language { padding-left: 8px; }
+
+.brand { display: inline-flex; align-items: center; gap: 10px; flex: 0 0 auto; color: var(--text); font-family: var(--serif); font-size: 1.28rem; font-weight: 600; letter-spacing: -.02em; text-decoration: none; }
+.brand > span > span { color: var(--muted); font-weight: 400; }
+.logo-mark { flex: 0 0 auto; overflow: visible; }
+.logo-tile { fill: var(--text); }
+.logo-drop { fill: var(--page); }
+.logo-star { fill: var(--text); transform-box: fill-box; transform-origin: center; transition: transform .6s cubic-bezier(.3, 1.5, .5, 1); }
+.logo-glint { fill: none; stroke: var(--text); stroke-width: 2.4; stroke-linecap: round; opacity: .35; }
+.brand:hover .logo-star { transform: rotate(90deg); }
+
+/* Footer */
+.site-footer { margin-top: 40px; border-top: 1px solid var(--line); }
+.footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; min-height: 88px; padding-block: 16px; }
+.footer-inner .brand { font-size: 1.08rem; }
+.footer-inner p { flex: 1 1 280px; font-size: .84rem; }
+
+/* Toasts */
+.toast-region { position: fixed; right: 22px; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 30; max-width: calc(100% - 32px); pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 16px; border-radius: 999px; font-size: .9rem; font-weight: 600; pointer-events: auto; background: var(--glass-sheen), var(--glass-strong); }
+.toast > .icon { color: var(--accent); }
+.toast-link { padding: 6px 12px; border-radius: 999px; background: var(--ink-glass); color: var(--on-ink); font-size: .82rem; text-decoration: none; }
+
+/* Dialog: a sheet of strong glass. */
+.dialog {
+  width: min(480px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 0; overflow: auto; border: 0; border-radius: 28px; color: var(--text);
+  background: var(--glass-sheen), var(--glass-strong); -webkit-backdrop-filter: blur(28px) saturate(1.8); backdrop-filter: blur(28px) saturate(1.8);
+  box-shadow: var(--glass-rim), 0 40px 80px -30px rgba(0, 10, 30, .55);
+}
+.dialog.media-dialog { width: min(600px, calc(100% - 24px)); }
+.dialog::backdrop { background: var(--backdrop); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.dialog[open] { animation: dialog-in .28s var(--ease); }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+.dialog-close { position: absolute; top: 12px; right: 12px; z-index: 2; }
+.dialog-body { display: grid; gap: 12px; padding: 24px; }
+.dialog-body > h2 { margin-right: 44px; font-size: 1.75rem; }
+.dialog-body .address { font-size: .86rem; }
+.detail-photo { position: relative; margin: 0; }
+.detail-image { display: block; width: 100%; aspect-ratio: 16 / 10; height: auto; object-fit: cover; }
+.detail-photo figcaption { position: absolute; left: 12px; right: 60px; bottom: 10px; }
+.detail-photo .photo-credit { display: inline-flex; max-width: 100%; padding: 4px 10px; border-radius: 999px; background: rgba(8, 12, 20, .55); color: #fff; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.photo-credit { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; color: var(--muted); font-size: .74rem; line-height: 1.4; }
+.photo-credit a { color: inherit; }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.facts > div { padding: 12px 14px; border-radius: 16px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
+.facts dt { color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.facts dd { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-weight: 600; }
+.callout { display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: color-mix(in srgb, var(--accent) 10%, transparent); font-size: .9rem; }
+.callout > .icon { color: var(--accent-ink); }
+.dialog-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.dialog-actions .text-link { margin-left: auto; }
+.credits-list { display: grid; gap: 0; max-height: 50vh; margin: 0; padding: 0; overflow: auto; list-style: none; }
+.credits-list li { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: .88rem; }
+.credits-list span { color: var(--muted); font-size: .8rem; }
+.lang-switch { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* Sign in */
+.auth-fast {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border: 0; border-radius: 22px; text-align: left;
+  background: var(--ink-sheen), var(--ink-glass); color: var(--on-ink); box-shadow: var(--ink-rim), 0 12px 26px -14px rgba(10, 20, 40, .6);
+  transition: transform .16s var(--ease), filter .2s;
+}
+.auth-fast:hover { filter: brightness(1.1); }
+.auth-fast:active { transform: scale(.98); }
+.auth-fast strong { display: block; }
+.auth-fast small { display: block; opacity: .75; font-size: .82rem; }
+.auth-fast-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 14px; background: rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25); }
+.auth-or { display: flex; align-items: center; gap: 10px; margin: 6px 0; color: var(--muted); font-size: .8rem; }
+.auth-or::before, .auth-or::after { content: ""; flex: 1; height: 1px; background: var(--line-strong); }
+.password-wrap { position: relative; display: block; }
+.password-wrap input { padding-right: 48px; }
+.password-toggle { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 12px; background: none; color: var(--muted); }
+.password-toggle:hover { color: var(--text); background: var(--soft); }
+.auth-switch { justify-self: center; padding: 8px; border: 0; background: none; color: var(--text); font-size: .9rem; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Launch screen: the glass logo, once per session. */
+.splash { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: var(--page); cursor: pointer; transition: opacity .4s var(--ease); }
+.splash[data-leaving] { opacity: 0; pointer-events: none; }
+.glass-reveal { position: relative; isolation: isolate; overflow: hidden; user-select: none; }
+.splash-reveal { position: absolute; inset: 0; }
+.glass-reveal-fallback { position: absolute; inset: 0; margin: auto; width: 96px; height: 96px; border-radius: 26px; background: var(--text); }
+.splash-skip { position: absolute; bottom: calc(28px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 1; color: var(--muted); }
+
+/* Theme and language changes */
+main, .site-header nav, .header-actions, .mobile-nav, .site-footer { transition: opacity .17s ease; }
+html.lang-out main, html.lang-out .site-header nav, html.lang-out .header-actions, html.lang-out .mobile-nav, html.lang-out .site-footer { opacity: 0; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .3s; animation-timing-function: var(--ease); }
+html.theme-vt::view-transition-old(root) { animation: none; }
+html.theme-vt::view-transition-new(root) { animation: theme-reveal .55s cubic-bezier(.3, .7, .2, 1); }
+@keyframes theme-reveal { from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0)); } to { clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0)); } }
+::view-transition-group(place-cover) { animation-duration: .38s; animation-timing-function: var(--ease); }
+::view-transition-old(place-cover), ::view-transition-new(place-cover) { height: 100%; object-fit: cover; }
+
+/* Phones */
+@media (max-width: 900px), (pointer: coarse) and (max-width: 1100px) {
+  .site-footer { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
+  .toast-region { bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .main-shell { padding-bottom: 100px; }
+}
+@media (max-width: 700px) {
+  .site-header { padding-top: calc(8px + env(safe-area-inset-top)); }
+  .header-inner { height: 56px; padding: 0 8px 0 10px; }
+  .site-header[data-scrolled] .header-inner { height: 52px; }
+  .header-language-code, .header-account span { display: none; }
+  .header-account { width: 40px; padding: 0; }
+  .toast-region { left: 16px; right: 16px; }
+  .toast { justify-content: space-between; }
+  .dialog { width: 100%; max-width: none; max-height: 92dvh; margin: auto 0 0; border-radius: 28px 28px 0 0; }
+  .dialog[open] { animation: sheet-in .3s var(--ease); }
+  @keyframes sheet-in { from { transform: translateY(40px); opacity: .4; } }
+}
+@media (max-width: 420px) {
+  .brand > span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open], .heart-button .icon, .splash { animation: none !important; transition: none !important; }
+}
+@media print {
+  .site-header, .mobile-nav, .site-footer, .lens-section, .planner-side, .toast-region, .place-actions, .heart-button { display: none !important; }
+  body::before { display: none; }
+}

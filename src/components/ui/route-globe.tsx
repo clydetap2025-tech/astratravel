@@ -8,7 +8,7 @@ import { drawGlobe, landDots, rotate, slerp, toVec, type Vec3 } from "./route-gl
  * turns slowly on its own when left alone.
  *
  * Fitted to AstraTravel:
- * - Styles live in public/styles.css (`rg*`), not in an imported global.css: the site ships one
+ * - Styles live in src/styles/globe.css (`rg*`), not in an imported global.css: the site ships one
  *   stylesheet and its CSP (style-src 'self') blocks inline style attributes in the server render.
  * - The globe keeps its rotation when props change: a new hub, focus or selection turns it there
  *   smoothly instead of starting over.

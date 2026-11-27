@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Flights (demo): search form, popular routes, results.
+   ========================================================================== */
+.booking-form { display: grid; grid-template-columns: minmax(340px, 1.4fr) minmax(150px, .5fr) minmax(150px, .5fr) auto; align-items: end; gap: 14px; padding: 20px; border-radius: var(--radius-l); }
+.route-fields { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: end; gap: 8px; }
+.swap-button { margin-bottom: 2px; }
+.booking-form .form-error { grid-column: 1 / -1; }
+.ticket-results { scroll-margin-top: 92px; }
+.ticket-results > h2 { margin-bottom: 16px; }
+.popular-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; }
+.popular-route { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 16px; border: 0; color: var(--text); text-align: left; cursor: pointer; transition: transform .25s var(--ease), box-shadow .25s; }
+.popular-route:hover { transform: translateY(-2px); box-shadow: var(--glass-rim), var(--glass-edge), var(--glass-lift); }
+.popular-text strong, .popular-fare strong { display: block; }
+.popular-text small, .popular-fare small { display: block; color: var(--muted); font-size: .78rem; font-variant-numeric: tabular-nums; }
+.popular-fare { text-align: right; }
+.popular-fare strong { font-family: var(--serif); font-size: 1.15rem; white-space: nowrap; }
+.result-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+.result-heading > span { color: var(--muted); font-size: .88rem; }
+.date-strip { display: grid; grid-template-columns: repeat(5, minmax(96px, 1fr)); gap: 6px; margin-bottom: 14px; padding: 5px; overflow-x: auto; border-radius: 22px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
+.date-strip button { min-height: 62px; padding: 8px 4px; border: 0; border-radius: 17px; background: none; white-space: nowrap; transition: background-color .2s; }
+.date-strip button:hover { background: var(--glass-strong); }
+.date-strip button[aria-pressed="true"] { background: var(--ink-sheen), var(--ink-glass); box-shadow: var(--ink-rim); color: var(--on-ink); }
+.date-strip span, .date-strip strong { display: block; }
+.date-strip span { opacity: .7; font-size: .78rem; }
+.date-strip strong { font-variant-numeric: tabular-nums; }
+.result-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.result-tools .field { display: block; min-width: 220px; }
+.flight-stack { display: grid; gap: 12px; }
+.flight-card { display: grid; grid-template-columns: minmax(120px, .8fr) minmax(220px, 1.6fr) minmax(110px, .7fr) auto; align-items: center; gap: 20px; padding: 16px 20px; }
+.carrier { display: flex; align-items: center; gap: 10px; font-size: .92rem; }
+.carrier-code { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: var(--glass-strong); box-shadow: var(--glass-rim), inset 0 0 0 1px var(--line); font-size: .74rem; font-weight: 700; }
+.flight-path { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.flight-point { text-align: center; }
+.flight-point strong { display: block; font-size: 1.2rem; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.flight-point sup { color: var(--muted); font-size: .66rem; }
+.flight-point span, .flight-leg, .flight-fare span { color: var(--muted); font-size: .8rem; }
+.flight-leg { min-width: 0; text-align: center; }
+.flight-line { display: flex; align-items: center; gap: 6px; color: var(--accent-ink); }
+.flight-line::before, .flight-line::after { content: ""; flex: 1; height: 1px; background: var(--line-strong); }
+.flight-line .icon { transform: rotate(45deg); }
+.flight-fare { text-align: right; }
+.flight-fare strong { display: block; font-family: var(--serif); font-size: 1.35rem; font-weight: 600; white-space: nowrap; }
+.flight-card-actions { display: flex; align-items: center; gap: 8px; }
+.detail-flight-path { padding: 14px; border-radius: 18px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
+
+@media (max-width: 980px) {
+  .booking-form { grid-template-columns: 1fr 1fr; }
+  .route-fields { grid-column: 1 / -1; }
+  .booking-form > .button { grid-column: 1 / -1; }
+  .flight-card { grid-template-columns: 1fr auto; }
+  .flight-path { grid-column: 1 / -1; grid-row: 2; }
+}
+@media (max-width: 520px) {
+  .booking-form { grid-template-columns: 1fr; padding: 16px; }
+  .route-fields { grid-template-columns: 1fr; }
+  .swap-button { justify-self: center; transform: rotate(90deg); }
+}

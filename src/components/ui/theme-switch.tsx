@@ -1,6 +1,6 @@
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { m } from "motion/react";
-import type { Theme } from "../../model";
+import type { Theme } from "../../shared/model";
 
 /**
  * A liquid-glass capsule with the three themes side by side, so any of them is one tap away and

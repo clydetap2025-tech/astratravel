@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Tokens. Light by default; dark from the system or <html data-theme="dark">.
+   Accent and backdrop follow the region of the city being explored
+   (<html data-region>, set by App from the trip city).
+   ========================================================================== */
+:root {
+  color-scheme: light;
+  --page: #e9eef4;
+  --text: #0c111b;
+  --muted: #4c5566;
+  --line: rgba(15, 25, 45, .1);
+  --line-strong: rgba(15, 25, 45, .2);
+  --surface: rgba(255, 255, 255, .62);
+  --soft: rgba(255, 255, 255, .5);
+  --invert: #0c111b;
+  --on-invert: #ffffff;
+  --danger: #b3261e;
+  --backdrop: rgba(10, 16, 28, .42);
+
+  /* Liquid glass */
+  --glass: rgba(255, 255, 255, .5);
+  --glass-strong: rgba(255, 255, 255, .76);
+  --glass-hover: rgba(255, 255, 255, .86);
+  --glass-blur: blur(20px) saturate(1.7);
+  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 48%);
+  --glass-rim: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 0 0 1px rgba(255, 255, 255, .42);
+  --glass-edge: inset 0 -1px 0 rgba(15, 25, 45, .06);
+  --glass-drop: 0 18px 40px -24px rgba(20, 40, 80, .36), 0 2px 6px rgba(20, 40, 80, .06);
+  --glass-lift: 0 22px 46px -22px rgba(20, 40, 80, .45), 0 3px 8px rgba(20, 40, 80, .08);
+  --ink-glass: rgba(14, 18, 28, .88);
+  --ink-sheen: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 55%);
+  --ink-rim: inset 0 1px 0 rgba(255, 255, 255, .26), inset 0 0 0 1px rgba(255, 255, 255, .07);
+  --on-ink: #ffffff;
+  --blob-1: #ffffff; --blob-2: #cfdff3; --blob-3: #e2daf4; --blob-4: #d3ebe3;
+
+  /* Colour */
+  --accent: #2f8fd8; --accent-ink: #1d6fae; --gold: #e9b44c; --heart: #e5484d;
+  --cat-nature: #2f8f63; --cat-food: #c8693b; --cat-culture: #a87d1c; --cat-city: #2f7fc4;
+  --cv-a: #e1e9f6; --cv-b: #8ea6d0; --cv-drop-a: rgba(255, 255, 255, .8); --cv-drop-b: rgba(255, 255, 255, .2); --cover-ink: #1b2333;
+
+  /* Shape and type */
+  --radius-l: 30px; --radius: 22px; --radius-s: 14px;
+  --sans: "Golos Text", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans JP", "Hiragino Sans", sans-serif;
+  --serif: "Literata", Georgia, "Noto Serif", "Noto Serif JP", "Hiragino Mincho ProN", serif;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+
+  /* City Lens and Almaty art */
+  --map-ground: #f4f5f7; --map-block: #e6e8ec; --map-park: #e9eee9; --map-hill: #eceae6; --map-hills: #e8e8e6;
+  --map-water: #d9e2ec; --map-avenue: #ffffff; --map-ink: #0c111b;
+  font-family: var(--sans);
+}
+
+/* Each part of the country has its own light: apricot south, turquoise Caspian, clay west,
+   steel centre, pine north, lilac east. Covers use .region-*, the page uses data-region. */
+.region-south, :root[data-region="south"] { --cv-a: #f7e6cc; --cv-b: #dba66a; }
+.region-caspian, :root[data-region="caspian"] { --cv-a: #d4f0f0; --cv-b: #6db8c4; }
+.region-west, :root[data-region="west"] { --cv-a: #f3e1d4; --cv-b: #c98e6e; }
+.region-centre, :root[data-region="centre"] { --cv-a: #e1e9f6; --cv-b: #8ea6d0; }
+.region-north, :root[data-region="north"] { --cv-a: #dbeee1; --cv-b: #7daf8d; }
+.region-east, :root[data-region="east"] { --cv-a: #e6e1f4; --cv-b: #9b93c8; }
+:root[data-region="south"] { --accent: #c98320; --accent-ink: #8a5a12; --blob-2: #f4dcb8; --blob-4: #f1e4cf; }
+:root[data-region="caspian"] { --accent: #0096ad; --accent-ink: #006a7b; --blob-2: #bfe6ea; --blob-4: #d3eeee; }
+:root[data-region="west"] { --accent: #c0683f; --accent-ink: #8c4526; --blob-2: #f0d6c6; --blob-4: #efe1d6; }
+:root[data-region="north"] { --accent: #2f8f63; --accent-ink: #1f6b48; --blob-2: #cfe7d7; --blob-4: #dcece0; }
+:root[data-region="east"] { --accent: #6f62c9; --accent-ink: #4d42a0; --blob-2: #ddd7f3; --blob-4: #e3def1; }
+
+/* Dark: the same rules for the system setting and for an explicit choice. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #05070b; --text: #eef1f6; --muted: #a3abba; --line: rgba(255, 255, 255, .09); --line-strong: rgba(255, 255, 255, .18);
+    --surface: rgba(30, 35, 48, .55); --soft: rgba(255, 255, 255, .06); --invert: #eef1f6; --on-invert: #07090d; --danger: #ff8a80; --backdrop: rgba(0, 0, 0, .6);
+    --glass: rgba(24, 29, 40, .5); --glass-strong: rgba(24, 29, 40, .78); --glass-hover: rgba(36, 42, 56, .86);
+    --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 48%);
+    --glass-rim: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 0 0 1px rgba(255, 255, 255, .07);
+    --glass-edge: inset 0 -1px 0 rgba(0, 0, 0, .3);
+    --glass-drop: 0 24px 48px -24px rgba(0, 0, 0, .8), 0 2px 8px rgba(0, 0, 0, .3); --glass-lift: 0 28px 56px -24px rgba(0, 0, 0, .9), 0 3px 10px rgba(0, 0, 0, .35);
+    --ink-glass: rgba(238, 242, 248, .92); --ink-sheen: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 55%);
+    --ink-rim: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 0 0 1px rgba(255, 255, 255, .2); --on-ink: #07090d;
+    --blob-1: #10233c; --blob-2: #0b2a33; --blob-3: #1e1636; --blob-4: #0d1f1b;
+    --accent: #58aef0; --accent-ink: #8cc8f5;
+    --cat-nature: #5cc495; --cat-food: #f09a6e; --cat-culture: #e3b850; --cat-city: #58aef0;
+    --cv-drop-a: rgba(255, 255, 255, .22); --cv-drop-b: rgba(255, 255, 255, .05); --cover-ink: rgba(255, 255, 255, .86);
+    --map-ground: #0f1218; --map-block: #191d25; --map-park: #142019; --map-hill: #181a1e; --map-hills: #14161a; --map-water: #172431; --map-avenue: #232833; --map-ink: #eef1f6;
+  }
+  :root:not([data-theme="light"]) .region-south, :root:not([data-theme="light"])[data-region="south"] { --cv-a: #3b2a15; --cv-b: #110b05; }
+  :root:not([data-theme="light"]) .region-caspian, :root:not([data-theme="light"])[data-region="caspian"] { --cv-a: #0f3236; --cv-b: #04131a; }
+  :root:not([data-theme="light"]) .region-west, :root:not([data-theme="light"])[data-region="west"] { --cv-a: #36201a; --cv-b: #130a07; }
+  :root:not([data-theme="light"]) .region-centre, :root:not([data-theme="light"])[data-region="centre"] { --cv-a: #18233e; --cv-b: #070b17; }
+  :root:not([data-theme="light"]) .region-north, :root:not([data-theme="light"])[data-region="north"] { --cv-a: #12291d; --cv-b: #05100a; }
+  :root:not([data-theme="light"]) .region-east, :root:not([data-theme="light"])[data-region="east"] { --cv-a: #231d3c; --cv-b: #0a0815; }
+  :root:not([data-theme="light"])[data-region="south"] { --accent: #f0b04c; --accent-ink: #f5c77a; --blob-2: #2c1d0c; --blob-4: #1d1408; }
+  :root:not([data-theme="light"])[data-region="caspian"] { --accent: #22c6de; --accent-ink: #6fdcec; --blob-2: #062a30; --blob-4: #08201f; }
+  :root:not([data-theme="light"])[data-region="west"] { --accent: #e58c62; --accent-ink: #f0ad8c; --blob-2: #2b150e; --blob-4: #1c0f0a; }
+  :root:not([data-theme="light"])[data-region="north"] { --accent: #5cc495; --accent-ink: #8bd9b5; --blob-2: #0b2617; --blob-4: #0a1a10; }
+  :root:not([data-theme="light"])[data-region="east"] { --accent: #a197f0; --accent-ink: #c2bbf6; --blob-2: #1c1538; --blob-4: #120e24; }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #05070b; --text: #eef1f6; --muted: #a3abba; --line: rgba(255, 255, 255, .09); --line-strong: rgba(255, 255, 255, .18);
+  --surface: rgba(30, 35, 48, .55); --soft: rgba(255, 255, 255, .06); --invert: #eef1f6; --on-invert: #07090d; --danger: #ff8a80; --backdrop: rgba(0, 0, 0, .6);
+  --glass: rgba(24, 29, 40, .5); --glass-strong: rgba(24, 29, 40, .78); --glass-hover: rgba(36, 42, 56, .86);
+  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 48%);
+  --glass-rim: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 0 0 1px rgba(255, 255, 255, .07);
+  --glass-edge: inset 0 -1px 0 rgba(0, 0, 0, .3);
+  --glass-drop: 0 24px 48px -24px rgba(0, 0, 0, .8), 0 2px 8px rgba(0, 0, 0, .3); --glass-lift: 0 28px 56px -24px rgba(0, 0, 0, .9), 0 3px 10px rgba(0, 0, 0, .35);
+  --ink-glass: rgba(238, 242, 248, .92); --ink-sheen: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 55%);
+  --ink-rim: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 0 0 1px rgba(255, 255, 255, .2); --on-ink: #07090d;
+  --blob-1: #10233c; --blob-2: #0b2a33; --blob-3: #1e1636; --blob-4: #0d1f1b;
+  --accent: #58aef0; --accent-ink: #8cc8f5;
+  --cat-nature: #5cc495; --cat-food: #f09a6e; --cat-culture: #e3b850; --cat-city: #58aef0;
+  --cv-drop-a: rgba(255, 255, 255, .22); --cv-drop-b: rgba(255, 255, 255, .05); --cover-ink: rgba(255, 255, 255, .86);
+  --map-ground: #0f1218; --map-block: #191d25; --map-park: #142019; --map-hill: #181a1e; --map-hills: #14161a; --map-water: #172431; --map-avenue: #232833; --map-ink: #eef1f6;
+}
+:root[data-theme="dark"] .region-south, :root[data-theme="dark"][data-region="south"] { --cv-a: #3b2a15; --cv-b: #110b05; }
+:root[data-theme="dark"] .region-caspian, :root[data-theme="dark"][data-region="caspian"] { --cv-a: #0f3236; --cv-b: #04131a; }
+:root[data-theme="dark"] .region-west, :root[data-theme="dark"][data-region="west"] { --cv-a: #36201a; --cv-b: #130a07; }
+:root[data-theme="dark"] .region-centre, :root[data-theme="dark"][data-region="centre"] { --cv-a: #18233e; --cv-b: #070b17; }
+:root[data-theme="dark"] .region-north, :root[data-theme="dark"][data-region="north"] { --cv-a: #12291d; --cv-b: #05100a; }
+:root[data-theme="dark"] .region-east, :root[data-theme="dark"][data-region="east"] { --cv-a: #231d3c; --cv-b: #0a0815; }
+:root[data-theme="dark"][data-region="south"] { --accent: #f0b04c; --accent-ink: #f5c77a; --blob-2: #2c1d0c; --blob-4: #1d1408; }
+:root[data-theme="dark"][data-region="caspian"] { --accent: #22c6de; --accent-ink: #6fdcec; --blob-2: #062a30; --blob-4: #08201f; }
+:root[data-theme="dark"][data-region="west"] { --accent: #e58c62; --accent-ink: #f0ad8c; --blob-2: #2b150e; --blob-4: #1c0f0a; }
+:root[data-theme="dark"][data-region="north"] { --accent: #5cc495; --accent-ink: #8bd9b5; --blob-2: #0b2617; --blob-4: #0a1a10; }
+:root[data-theme="dark"][data-region="east"] { --accent: #a197f0; --accent-ink: #c2bbf6; --blob-2: #1c1538; --blob-4: #120e24; }
+
+/* More contrast when the system asks for it. */
+@media (prefers-contrast: more) {
+  :root { --muted: var(--text); --line: var(--line-strong); --glass: var(--glass-strong); }
+}

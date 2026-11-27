@@ -5,7 +5,7 @@ import { slerp, toLonLat, toVec } from "./route-globe-utils/globe";
 /**
  * The layout around a Route Globe: the host's header and card beside the globe on wide containers
  * and above and below it on narrow ones (a container query, so it follows the space it is given,
- * not the window). Styles: `gs-*` in public/styles.css.
+ * not the window). Styles: `gs-*` in src/styles/globe.css.
  */
 export function GlobeStage({ globe, header, card, hint, className = "" }: {
   globe: ReactNode;

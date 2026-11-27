@@ -29,6 +29,7 @@ await bundleClient();
 await collect("public");
 await addAsset("dist/client/index.html", "/index.html");
 await addAsset("dist/client/app.js", "/app.js");
+await addAsset("dist/client/styles.css", "/styles.css");
 await writeFile(new URL("dist/worker-assets.mjs", source), "export const assets = " + JSON.stringify(assets) + ";\n");
 await build({
   absWorkingDir: projectRoot,

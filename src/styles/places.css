@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Places: the city bar, the city header over its photo, the catalogue and
+   the place cards.
+   ========================================================================== */
+
+/* City bar: a glass rail of cities. */
+.city-bar { display: flex; gap: 4px; margin: 6px 0 18px; padding: 5px; overflow-x: auto; border-radius: 999px; scrollbar-width: none; scroll-snap-type: x proximity;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
+.city-bar::-webkit-scrollbar { display: none; }
+.city-chip { display: grid; flex: 0 0 auto; padding: 7px 15px 8px; border: 0; border-radius: 999px; background: none; color: var(--muted); text-align: left; scroll-snap-align: start; transition: background-color .2s, color .2s; }
+.city-chip span { font-size: .93rem; font-weight: 600; white-space: nowrap; }
+.city-chip small { font-size: .7rem; font-variant-numeric: tabular-nums; }
+.city-chip:hover { color: var(--text); background: var(--soft); }
+.city-chip[aria-pressed="true"] { background: var(--ink-sheen), var(--ink-glass); box-shadow: var(--ink-rim); color: var(--on-ink); }
+.city-chip:last-child { margin-right: 40px; }
+
+/* City header: the city's photo across the page, drifting with the scroll, glass on top. */
+.city-header { position: relative; display: grid; align-items: end; min-height: clamp(440px, 62vh, 600px); overflow: hidden; isolation: isolate; border-radius: var(--radius-l); box-shadow: var(--glass-drop); }
+.city-header > .city-cover { --depth: 56px; position: absolute; inset: 0; z-index: -1; }
+.city-header::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5, 8, 14, 0) 30%, rgba(5, 8, 14, .38)); pointer-events: none; }
+.city-header-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(240px, .65fr); align-items: end; gap: 16px; padding: 18px; }
+.city-panel { display: grid; gap: 14px; padding: 24px 26px; border-radius: 26px; }
+.city-panel h1 { font-size: clamp(2.8rem, 6.6vw, 5rem); line-height: .95; outline: none; }
+.stats { display: flex; flex-wrap: wrap; gap: 0; }
+.stats > div { display: flex; flex-direction: column-reverse; gap: 2px; padding: 2px 18px 2px 0; margin-right: 18px; border-right: 1px solid var(--line-strong); }
+.stats > div:last-child { border-right: 0; margin-right: 0; }
+.stats dd { font-family: var(--serif); font-size: 1.75rem; font-weight: 600; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stats dd small { font-family: var(--sans); font-size: .78rem; color: var(--muted); }
+.stats dt { color: var(--muted); font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.progress { display: grid; gap: 6px; max-width: 420px; }
+.progress-text { display: flex; align-items: center; gap: 6px; font-size: .86rem; font-weight: 600; }
+.progress-text .icon { color: var(--accent-ink); }
+.city-panel .actions { margin-top: 2px; }
+.city-map { display: grid; gap: 4px; padding: 14px 14px 10px; border-radius: 26px; }
+.city-map-caption { color: var(--muted); font-size: .8rem; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* The map of Kazakhstan with every city. */
+.kz-map { display: block; width: 100%; height: auto; overflow: visible; }
+.kz-land { fill: var(--glass-strong); stroke: var(--line-strong); stroke-width: 1.5; stroke-linejoin: round; }
+.kz-city circle { fill: var(--muted); transition: fill .2s; }
+.kz-city a { cursor: pointer; outline: none; }
+.kz-city a:hover circle:not(.kz-hit), .kz-city a:focus-visible circle:not(.kz-hit) { fill: var(--text); }
+.kz-city a:focus-visible .kz-hit { fill: none; stroke: var(--accent); stroke-width: 2; }
+.kz-city .kz-hit { fill: transparent; }
+.kz-city.is-on circle:not(.kz-hit) { fill: var(--accent); }
+.kz-ring { fill: none !important; stroke: var(--accent); stroke-width: 2; opacity: .5; }
+
+/* Catalogue */
+.zone + .zone { margin-top: 30px; }
+.zone-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 22px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line-strong); font-family: var(--serif); font-size: 1.25rem; }
+.zone-title span { color: var(--muted); font-family: var(--sans); font-size: .8rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.catalog .chips { margin-bottom: 6px; }
+.place-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 20px; }
+
+/* Place card: the photo drifts in its frame, glass body under it, actions at the bottom. */
+.place-card { display: flex; flex-direction: column; overflow: hidden; border-radius: 26px; transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.place-card:hover { transform: translateY(-3px); box-shadow: var(--glass-rim), var(--glass-edge), var(--glass-lift); }
+.place-card:has(.card-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+.place-photo { position: relative; aspect-ratio: 4 / 3; margin: 8px 8px 0; overflow: hidden; border-radius: 20px; background: var(--cv-b); }
+.place-photo > .parallax-frame { width: 100%; height: 100%; }
+.place-photo > .parallax-frame > .parallax-layer { transition: scale .6s var(--ease); }
+.place-card:hover .place-photo .parallax-layer { scale: 1.04; }
+.place-tag, .place-visited, .photo-note {
+  position: absolute; display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: .72rem; font-weight: 700;
+  background: var(--glass-sheen), var(--glass-strong); -webkit-backdrop-filter: blur(12px) saturate(1.6); backdrop-filter: blur(12px) saturate(1.6); box-shadow: var(--glass-rim);
+}
+.place-tag { top: 10px; left: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.place-tag.is-match { background: var(--ink-sheen), var(--ink-glass); color: var(--on-ink); }
+.place-tag .country-badge { border-color: currentColor; }
+.place-visited { top: 46px; left: 10px; color: var(--accent-ink); }
+.photo-note { left: 10px; bottom: 10px; font-weight: 600; color: var(--muted); font-size: .7rem; }
+.place-photo .heart-button { position: absolute; top: 8px; right: 8px; }
+.place-body { display: flex; flex: 1; flex-direction: column; gap: 6px; padding: 14px 18px 16px; }
+.place-location { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: .8rem; font-weight: 600; }
+.place-body h3 { font-family: var(--serif); font-size: 1.28rem; font-weight: 600; letter-spacing: -.01em; }
+.card-link { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.card-link:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.card-link:focus-visible { outline: none; }
+.place-summary { font-size: .9rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.place-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto; padding-top: 6px; color: var(--text); font-size: .84rem; font-weight: 600; }
+.place-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.place-meta .icon { color: var(--muted); }
+.place-card[data-visited] .place-body h3::after { content: " ✓"; color: var(--accent-ink); font-size: .8em; }
+.place-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.place-actions.is-compact { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+.place-actions.is-compact .button { flex: 1; }
+.place-actions.is-compact .icon-button { width: 38px; height: 38px; }
+.place-actions .icon-button[aria-pressed="true"] { color: var(--on-ink); }
+
+/* Drawn covers for places without a photo */
+.sketch-cover { display: block; width: 100%; height: 100%; color: var(--cover-ink); }
+.cover-stop-a { stop-color: var(--cv-a); }
+.cover-stop-b { stop-color: var(--cv-b); }
+.cover-drop-a { stop-color: var(--cv-drop-a); }
+.cover-drop-b { stop-color: var(--cv-drop-b); }
+.cover-drop-c { stop-color: var(--cv-drop-b); stop-opacity: 0; }
+.cover-art { opacity: .82; }
+
+/* Invitation to the planner */
+.promo { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; margin-top: 48px; padding: 22px 24px; border-radius: var(--radius-l); }
+.promo h2 { font-size: 1.4rem; }
+.promo p { margin-top: 4px; }
+
+@media (max-width: 860px) {
+  .city-header { min-height: 0; }
+  .city-header-grid { grid-template-columns: 1fr; padding: 12px; padding-top: 180px; }
+  .city-map { display: none; }
+  .promo { grid-template-columns: auto minmax(0, 1fr); }
+  .promo .button { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) {
+  .city-panel { padding: 18px; }
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .stats > div { padding: 0; margin: 0; border: 0; }
+  .stats dd { font-size: 1.45rem; }
+  .city-panel .actions .button { flex: 1 1 100%; }
+  .city-bar { border-radius: 22px; }
+}

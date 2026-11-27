@@ -1,0 +1,38 @@
+/* ==========================================================================
+   Parallax. src/shared/parallax.ts writes --scroll on <html> and --p (-1…1,
+   the element's place on screen) on each [data-parallax] frame; here those
+   become small transforms. Pictures drift inside their frame against the
+   scroll, text and the globe drift a little apart, and the backdrop moves
+   slower than the page. Under reduced motion nothing is written, so every
+   layer stays where it is.
+   ========================================================================== */
+
+/* The backdrop: four soft pools of light behind the glass. */
+body::before {
+  content: ""; position: fixed; inset: -20vmax; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(32vmax 28vmax at 18% 14%, var(--blob-1), transparent 70%),
+    radial-gradient(30vmax 26vmax at 84% 18%, var(--blob-2), transparent 70%),
+    radial-gradient(34vmax 30vmax at 72% 86%, var(--blob-3), transparent 70%),
+    radial-gradient(30vmax 26vmax at 12% 78%, var(--blob-4), transparent 70%);
+  transform: translate3d(0, max(-14vmax, calc(var(--scroll, 0) * -.06px)), 0);
+  will-change: transform;
+}
+
+/* A picture in a frame: the image is taller than the frame by 2 × depth and slides inside it. */
+.parallax-frame { --depth: 18px; position: relative; display: block; overflow: hidden; }
+.parallax-frame > .parallax-layer {
+  display: block; width: 100%; height: calc(100% + 2 * var(--depth)); max-width: none; margin-top: calc(-1 * var(--depth)); object-fit: cover;
+  transform: translate3d(0, calc(var(--p, 0) * var(--depth) * -1), 0); will-change: transform;
+}
+
+/* Layers that are not pictures: the hero text rises a little faster than the page, the globe a little slower. */
+.parallax-frame.is-text, .parallax-frame.is-globe { overflow: visible; }
+.parallax-frame.is-text > .parallax-layer, .parallax-frame.is-globe > .parallax-layer { height: auto; margin: 0; }
+.parallax-frame.is-text > .parallax-layer { transform: translate3d(0, calc(var(--p, 0) * 26px), 0); }
+.parallax-frame.is-globe { width: 100%; height: 100%; }
+.parallax-frame.is-globe > .parallax-layer { width: 100%; height: 100%; transform: translate3d(0, calc(var(--p, 0) * -36px), 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, .parallax-frame > .parallax-layer { transform: none !important; }
+}

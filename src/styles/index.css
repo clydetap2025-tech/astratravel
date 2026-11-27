@@ -1,0 +1,16 @@
+/* AstraTravel styles. Bundled into one /styles.css by frontend.mjs (esbuild).
+   Order: fonts and tokens, base and glass, then each part of the app. */
+@import "./fonts.css";
+@import "./tokens.css";
+@import "./base.css";
+@import "./glass.css";
+@import "./parallax.css";
+@import "./chrome.css";
+@import "./navbar.css";
+@import "./theme-switch.css";
+@import "./globe.css";
+@import "./onboarding.css";
+@import "./places.css";
+@import "./planner.css";
+@import "./lens.css";
+@import "./tickets.css";

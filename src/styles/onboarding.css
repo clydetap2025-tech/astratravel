@@ -1,0 +1,73 @@
+/* ==========================================================================
+   First visit: the globe of cities, then the short setup.
+   ========================================================================== */
+.globe-hero { position: relative; padding-top: 18px; }
+@container (min-width: 760px) {
+  .gs-hero .gs-stage { grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(24px, 4vw, 56px); }
+  .gs-hero .gs-header { grid-column: 1; grid-row: 1; }
+  .gs-hero .gs-card { grid-column: 1; grid-row: 2; }
+  .gs-hero .gs-globe { grid-column: 2; grid-row: 1 / span 2; width: min(48cqw, 560px); }
+}
+/* The hero globe is magnified past its box, so its edge fades into the page instead of being cut. */
+.gs-hero .rg__canvas { -webkit-mask-image: radial-gradient(closest-side, #000 74%, transparent); mask-image: radial-gradient(closest-side, #000 74%, transparent); }
+.hero-copy .parallax-layer { display: grid; gap: 14px; }
+.hero-title { font-size: clamp(2.8rem, 6.4vw, 5.4rem); line-height: .98; letter-spacing: -.035em; outline: none; }
+.hero-actions { margin-top: 10px; }
+.hero-city { display: grid; gap: 6px; max-width: 26rem; padding: 18px 20px 20px; border-radius: 26px; }
+.hero-city-label { color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.hero-city-select select { min-height: 44px; border-radius: 999px; font-weight: 600; }
+.hero-city-name { display: block; margin-top: 6px; font-family: var(--serif); font-size: 2.1rem; font-weight: 600; line-height: 1.05; letter-spacing: -.02em; }
+.hero-city-region, .hero-city-meta { display: block; color: var(--muted); }
+.hero-city-meta { margin-top: 4px; font-size: .84rem; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.hero-city-thumbs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.hero-city-thumb { display: grid; gap: 5px; min-width: 0; padding: 0; border: 0; background: none; color: var(--muted); text-align: left; cursor: pointer; }
+.hero-city-thumb small { overflow: hidden; font-size: .72rem; font-weight: 600; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.hero-city-thumb:hover small { color: var(--text); }
+.hero-thumb { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; border-radius: 14px; overflow: hidden; object-fit: cover; transition: transform .3s var(--ease); }
+.hero-city-thumb:hover .hero-thumb { transform: scale(1.03); }
+
+/* Quick setup */
+.quick { max-width: 880px; margin: 8px auto 0; padding: clamp(18px, 3vw, 34px); border-radius: var(--radius-l); }
+.quick-top { display: flex; align-items: center; gap: 12px; }
+.quick-top .button { margin-left: auto; }
+.quick-city { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); font-size: .86rem; font-weight: 600; }
+.quick-head { display: grid; gap: 8px; margin: 22px 0; }
+.quick-title { font-size: clamp(2rem, 4.6vw, 3.2rem); outline: none; }
+.quick-body { display: grid; gap: 22px; }
+.quick-field { display: grid; gap: 10px; }
+.quick-label { color: var(--muted); font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.quick-who { display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; width: min(100%, 440px); padding: 4px; border-radius: 999px; background: var(--soft); box-shadow: inset 0 1px 3px rgba(10, 20, 40, .1), inset 0 0 0 1px var(--line); }
+.quick-who-option { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; border: 0; border-radius: 999px; background: none; color: var(--muted); font-weight: 600; }
+.quick-who-option[aria-checked="true"] { color: var(--on-ink); }
+.quick-who-option > :not(.quick-drop) { position: relative; z-index: 1; }
+.quick-drop { position: absolute; inset: 0; border-radius: 999px; background: var(--ink-sheen), var(--ink-glass); box-shadow: var(--ink-rim), 0 8px 18px -10px rgba(10, 20, 40, .6); }
+.quick-field .select-wrap { max-width: 440px; }
+.quick-route { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: .92rem; font-variant-numeric: tabular-nums; }
+.quick-route-line { flex: 0 1 80px; height: 1px; background: repeating-linear-gradient(90deg, var(--text) 0 5px, transparent 5px 9px); }
+.quick-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.quick-chip { min-height: 42px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--glass-sheen), var(--glass-strong); box-shadow: var(--glass-rim), var(--glass-edge); font-weight: 600; }
+.quick-chip[aria-checked="true"] { background: var(--ink-sheen), var(--ink-glass); box-shadow: var(--ink-rim); color: var(--on-ink); }
+.quick-note { max-width: 36em; }
+.quick-likes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.quick-like {
+  position: relative; display: grid; gap: 4px; justify-items: start; padding: 14px; border: 0; border-radius: 22px; text-align: left; color: var(--text);
+  background: var(--glass-sheen), var(--glass-strong); box-shadow: var(--glass-rim), var(--glass-edge); transition: box-shadow .2s, transform .16s var(--ease);
+}
+.quick-like .glass-icon { margin-bottom: 6px; }
+.quick-like small { color: var(--muted); font-size: .8rem; line-height: 1.35; }
+.quick-like[aria-pressed="true"] { box-shadow: var(--glass-rim), inset 0 0 0 2px var(--accent), 0 10px 22px -14px var(--accent); }
+.quick-like-check { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; }
+.quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+
+@media (max-width: 760px) {
+  .gs-hero .gs-header { text-align: left; }
+  .hero-city { max-width: none; }
+  .hero-title { font-size: clamp(2.4rem, 11vw, 3.4rem); }
+  .hero-actions { flex-wrap: nowrap; }
+  .hero-actions .button { flex: 1 1 0; min-width: 0; padding-inline: 12px; font-size: .9rem; white-space: normal; text-align: center; }
+}
+@media (max-width: 700px) {
+  .quick-likes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quick-actions .button { flex: 1 1 100%; }
+  .quick-actions { position: sticky; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 4; }
+}

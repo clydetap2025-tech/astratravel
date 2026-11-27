@@ -1,7 +1,7 @@
 // AstraTravel service worker: the app shell works offline after the first visit.
 // Pages and the app bundle are network-first so a deploy shows up at once; images and fonts are
 // cache-first. The API is never cached.
-const CACHE = "astratravel-v6";
+const CACHE = "astratravel-v7";
 const SHELL = ["/", "/app.js", "/styles.css", "/theme.js", "/manifest.webmanifest", "/assets/astratravel.svg"];
 
 self.addEventListener("install", (event) => {

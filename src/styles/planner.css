@@ -1,0 +1,73 @@
+/* ==========================================================================
+   Route: my route, the ready plan by day, and the live map of Almaty.
+   ========================================================================== */
+
+/* My route */
+.my-route { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 0; overflow: hidden; border-radius: var(--radius-l); }
+.route-list { margin: 0; padding: 8px 0; list-style: none; counter-reset: stop; }
+.route-stop { position: relative; display: grid; grid-template-columns: 34px 72px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 18px; }
+.route-stop + .route-stop { border-top: 1px solid var(--line); }
+.route-number { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--ink-sheen), var(--ink-glass); box-shadow: var(--ink-rim); color: var(--on-ink); font-size: .8rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.route-thumb { width: 72px; height: 54px; border-radius: 12px; object-fit: cover; overflow: hidden; }
+.route-text { display: grid; gap: 2px; min-width: 0; }
+.route-text .card-link { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.route-text small { color: var(--muted); font-size: .8rem; }
+.route-tools { display: flex; gap: 6px; }
+.route-tools .icon-button { width: 36px; height: 36px; }
+.route-summary { display: grid; align-content: center; gap: 10px; padding: 22px; border-left: 1px solid var(--line); background: var(--soft); }
+.route-summary p { display: flex; align-items: center; gap: 8px; color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.route-summary .icon { color: var(--muted); }
+
+/* Ready plan */
+.planner-layout { display: grid; grid-template-columns: minmax(290px, 380px) minmax(0, 1fr); align-items: start; gap: 28px; }
+.planner-side { display: grid; gap: 16px; position: sticky; top: 92px; }
+.planner-form { padding: 22px; }
+.planner-form h3 { margin-bottom: 14px; font-family: var(--serif); font-size: 1.3rem; }
+.planner-form fieldset { display: grid; gap: 16px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.ai-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px 14px; align-items: start; padding: 20px; }
+.ai-card h3 { font-family: var(--serif); font-size: 1.15rem; }
+.ai-card p { margin-top: 4px; font-size: .88rem; }
+.ai-card .button, .ai-card .note { grid-column: 1 / -1; }
+#plan-output { min-width: 0; scroll-margin-top: 92px; }
+.plan-result { display: grid; gap: 14px; }
+.plan-result-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.plan-result-head h2 { font-size: 1.7rem; }
+.plan-mode { display: flex; align-items: center; gap: 6px; margin-top: 4px; color: var(--muted); font-size: .84rem; }
+.day-card { padding: 18px 20px; }
+.day-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.day-head h3 { font-family: var(--serif); font-size: 1.3rem; }
+.day-head span { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: .84rem; }
+.timeline { margin: 0; padding: 0; list-style: none; }
+.timeline > li { position: relative; display: grid; grid-template-columns: 54px 64px minmax(0, 1fr); align-items: center; gap: 14px; padding: 10px 0; }
+.timeline > li::before { content: ""; position: absolute; left: 26px; top: 0; bottom: 0; width: 2px; background: var(--line-strong); z-index: -1; }
+.timeline > li:first-child::before { top: 50%; }
+.timeline > li:last-child::before { bottom: 50%; }
+.timeline > li:only-child::before { display: none; }
+.stop-time { justify-self: center; padding: 4px 8px; border-radius: 999px; background: var(--glass-strong); box-shadow: inset 0 0 0 1.5px var(--accent); font-size: .78rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stop-thumb { display: block; width: 64px; height: 48px; border-radius: 12px; overflow: hidden; object-fit: cover; }
+.title-button { padding: 0; border: 0; background: none; color: inherit; font-weight: 600; text-align: left; cursor: pointer; }
+.title-button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.timeline p { font-size: .84rem; }
+.timeline p .icon { margin-right: 4px; vertical-align: -2px; }
+.day-note { margin-top: 6px; padding-top: 10px; border-top: 1px dashed var(--line-strong); color: var(--text); font-size: .9rem; }
+.plan-total { display: grid; gap: 2px; padding: 16px 4px 0; }
+.plan-total strong { font-family: var(--serif); font-size: 1.3rem; }
+.plan-total > span { color: var(--muted); font-size: .84rem; }
+
+/* The live map of Almaty sits in glass too. */
+.lens-section .cl-stage { border: 0; border-radius: var(--radius-l); box-shadow: var(--glass-rim), var(--glass-drop); }
+
+@media (max-width: 980px) {
+  .planner-layout { grid-template-columns: 1fr; }
+  .planner-side { position: static; }
+  .my-route { grid-template-columns: 1fr; }
+  .route-summary { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 560px) {
+  .route-stop { grid-template-columns: 30px 56px minmax(0, 1fr); padding: 10px 12px; }
+  .route-thumb { width: 56px; height: 44px; }
+  .route-tools { grid-column: 2 / -1; }
+  .timeline > li { grid-template-columns: 48px 52px minmax(0, 1fr); gap: 10px; }
+  .timeline > li::before { left: 23px; }
+  .stop-thumb { width: 52px; height: 40px; }
+}
