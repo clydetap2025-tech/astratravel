@@ -2,6 +2,7 @@ import { budgets, categories, cityById, languages, origins, places, placeById } 
 import { districtByKey } from "../../data/districts.js";
 import { copy } from "../../data/i18n.js";
 import { airports, demoFlights, isFlightSearch } from "../../data/tickets.js";
+import { accessToken } from "./supabase";
 
 export type Language = keyof typeof languages;
 export type Message = keyof typeof copy;
@@ -23,28 +24,38 @@ export type Plan = {
   days: { placeIds: string[]; cost: number; minutes: number; note?: string }[];
   overview?: string;
 };
+export type Role = "user" | "editor" | "admin";
+export type SessionUser = { id?: string; email?: string | null; username?: string | null; displayName?: string | null; role?: Role };
 export type Session = {
-  mode: "local" | "offline" | "sites";
-  user: { username?: string | null } | null;
+  /** supabase: accounts in Supabase; local: the server has no Supabase settings; offline: the demo file. */
+  mode: "local" | "offline" | "sites" | "supabase";
+  user: SessionUser | null;
   canActivate?: boolean;
   /** Whether the server has an AI key; without one the AI card says so instead of asking to sign in. */
   ai?: boolean;
+  /** "Try without signing up": a few Astra AI messages a day without an account. */
+  guestChat?: boolean;
+  /** Public Supabase settings (URL and anon key) for the browser client. */
+  supabase?: { url: string; anonKey: string };
 };
 export type Modal = { kind: "profile" | "account" | "credits" } | { kind: "place"; place: Place } | { kind: "flight"; flight: Flight };
-export type Page = "welcome" | "places" | "tickets" | "saved" | "planner";
-export type AuthAction = "login" | "register" | "demo" | "logout" | "activate";
-export type Credentials = { username: string; password: string };
+export type Page = "welcome" | "places" | "tickets" | "saved" | "planner" | "assistant" | "account" | "reset" | "admin" | "privacy" | "terms";
+/** Sign-in on the Sites host (lib/worker.mjs); Supabase sign-in runs in the browser. */
+export type AuthAction = "activate";
 type ApiRoutes = {
   session: { input: undefined; output: Session };
   plan: { input: PlanInputs & Pick<Preferences, "language" | "origin" | "visitor" | "district" | "city">; output: Plan };
-} & Record<AuthAction, { input: Credentials | Record<string, never>; output: Session }>;
+} & Record<AuthAction, { input: Record<string, never>; output: Session }>;
 export type Api = <Route extends keyof ApiRoutes>(
   route: Route, body: ApiRoutes[Route]["input"], signal?: AbortSignal,
 ) => Promise<ApiRoutes[Route]["output"]>;
 
 export const fetchApi: Api = async (route, body, signal) => {
-  const response = await fetch("/api/" + route, body === undefined ? { signal } : {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal,
+  // Signed in with Supabase: the server checks the access token (Authorization: Bearer …).
+  const token = await accessToken();
+  const auth: Record<string, string> = token ? { Authorization: "Bearer " + token } : {};
+  const response = await fetch("/api/" + route, body === undefined ? { signal, headers: auth } : {
+    method: "POST", headers: { "Content-Type": "application/json", ...auth }, body: JSON.stringify(body), signal,
   });
   const result = await response.json();
   if (!response.ok) throw new Error(result.error ?? "request_error");

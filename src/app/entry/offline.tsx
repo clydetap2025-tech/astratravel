@@ -3,15 +3,14 @@ import { planRoute, validateRequest } from "../../../lib/planner.mjs";
 import { App } from "../App";
 import type { Api, Plan, Session } from "../../shared/model";
 
-let active = false;
+// The offline demo has no accounts and no AI: the planner works in the browser, the chat says "after signing in".
 function session(): Session {
-  return { mode: "offline", ai: false, user: active ? { username: null } : null };
+  return { mode: "offline", ai: false, user: null };
 }
 
 const offlineApi = (async (route, body) => {
-  if (route === "demo" || route === "logout") active = route === "demo";
-  if (route === "session" || route === "demo" || route === "logout") return session();
-  if (route !== "plan" || !active) throw new Error("unauthorized");
+  if (route === "session") return session();
+  if (route !== "plan") throw new Error("unauthorized");
   const preferences = validateRequest(body);
   if (!preferences) throw new Error("invalid_input");
   const plan = planRoute(preferences);

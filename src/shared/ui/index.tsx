@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { photoCredits } from "../../../data/photos.js";
 import { PlaceCover } from "../../components/ui/place-cover";
+import { photoOverrides } from "../catalog-sync";
 import { useTravel } from "../context";
 import type { Message, Place } from "../model";
 import { GlassIcon, Icon } from "./Icon";
@@ -92,7 +93,7 @@ export function PlaceImage({ place, className, width, height, lazy = true, paral
 }) {
   const { asset } = useTravel();
   const picture = hasPhoto(place)
-    ? <img className={parallax ? "parallax-layer" : className} src={asset(place.id + ".webp")} data-asset={place.id + ".webp"} alt=""
+    ? <img className={parallax ? "parallax-layer" : className} src={photoOverrides[place.id] ?? asset(place.id + ".webp")} data-asset={place.id + ".webp"} alt=""
       width={width} height={height} loading={lazy ? "lazy" : undefined} decoding="async" />
     : <PlaceCover id={place.id} city={place.city} category={place.category} className={parallax ? "parallax-layer" : className} />;
   return parallax ? <span className={"parallax-frame" + (className ? " " + className : "")} data-parallax>{picture}</span> : picture;

@@ -9,15 +9,23 @@ import { tr } from "../../data/i18n.js";
 import { cityRegion } from "../components/ui/place-cover";
 import { initialFilters } from "../features/places/catalog";
 import { initialTicketState } from "../features/tickets/flights";
+import { AccountPage, ResetPage } from "../pages/AccountPage";
+import { AdminPage } from "../pages/AdminPage";
+import { askAstra, AssistantPage } from "../pages/AssistantPage";
 import { HomePage } from "../pages/HomePage";
+import { LegalPage } from "../pages/LegalPage";
 import { PlacesPage } from "../pages/PlacesPage";
 import { initialPlanInputs, PlannerPage } from "../pages/PlannerPage";
 import { SavedPage } from "../pages/SavedPage";
 import { TicketsPage } from "../pages/TicketsPage";
+import { loadCatalog } from "../shared/catalog-sync";
 import { TravelContext, useDarkTheme } from "../shared/context";
 import { tripCity } from "../shared/geo";
-import type { Airport, Api, Flight, Modal, Page, Place, Plan, Preferences, Session, Theme } from "../shared/model";
+import type { Airport, Api, Flight, Modal, Page, Place, Plan, Preferences, Role, Saved, Session, Theme } from "../shared/model";
 import { fetchApi, placeFromHash, readOnboarded, readPlan, readPreferences, readSaved, readTheme, reducedMotion, saveLocal, scrollToId } from "../shared/model";
+import { startSupabase, supabaseClient } from "../shared/supabase";
+import type { LimitStatus } from "../shared/sync";
+import { mergeLocalIntoAccount, readLimit, savePreferences, writeChange } from "../shared/sync";
 import { fade, onServer, spring } from "../shared/motion";
 import { useParallax } from "../shared/parallax";
 import { Icon } from "../shared/ui";
@@ -25,10 +33,13 @@ import { DialogContent } from "./Dialogs";
 import { Footer, Header, Navigation, pages } from "./Header";
 import { Splash } from "./Splash";
 
+/** Pages outside the navbar: the chat, the account, password reset, the admin panel and the legal texts. */
+const otherPages: Page[] = ["welcome", "assistant", "account", "reset", "admin", "privacy", "terms"];
+
 /** The page in the address; a first visit with no page named starts with the welcome flow. */
 function currentPage(): Page {
   const hash = globalThis.location?.hash.slice(1).split("/")[0];
-  if (hash === "welcome" || (hash && (pages as string[]).includes(hash))) return hash as Page;
+  if (hash && ((pages as string[]).includes(hash) || otherPages.includes(hash as Page))) return hash as Page;
   return onServer || readOnboarded() ? "places" : "welcome";
 }
 
@@ -74,12 +85,93 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
   const identityRevision = useRef(0);
   const t = (key: Parameters<typeof tr>[0]) => tr(key, preferences.language);
 
+  const [limit, setLimit] = useState<LimitStatus | null>(null);
+  const [appSettings, setAppSettings] = useState({ aiLimit: 15, registrationOpen: true, banner: "" });
+  const [, setCatalogVersion] = useState(0);
+  const sessionUser = useRef<string | null>(null);
+  const savedRef = useRef(saved);
+  savedRef.current = saved;
+  const preferencesRef = useRef(preferences);
+  preferencesRef.current = preferences;
+
+  /** App-wide settings anyone may read: the AI limit, whether sign-up is open and the banner. */
+  async function refreshSettings() {
+    const client = supabaseClient();
+    if (!client) return;
+    const { data } = await client.from("app_settings").select("key, value").in("key", ["ai_daily_limit", "registration_open", "maintenance_message"]);
+    const map = Object.fromEntries((data ?? []).map((row) => [row.key, row.value]));
+    setAppSettings({
+      aiLimit: Number(map.ai_daily_limit ?? 15), registrationOpen: map.registration_open !== false,
+      banner: typeof map.maintenance_message === "string" ? map.maintenance_message : "",
+    });
+  }
+
+  /** Signed in with Supabase: join this browser's lists to the account, read the profile and today's AI limit. */
+  async function signedInAs(user: { id: string; email?: string | null }) {
+    const client = supabaseClient();
+    if (!client) return;
+    setSession((current) => ({ ...current, user: { ...current.user, id: user.id, email: user.email ?? null } }));
+    try {
+      const account = await mergeLocalIntoAccount(client, user.id, savedRef.current, preferencesRef.current);
+      setSaved(account.saved);
+      if (Object.keys(account.profile.preferences).length) {
+        const next = { ...preferencesRef.current, ...account.profile.preferences };
+        setPreferences(next);
+        saveLocal("profile", next);
+      }
+      setSession((current) => current.user?.id === user.id
+        ? { ...current, user: { ...current.user, role: account.profile.role as Role, displayName: account.profile.displayName } } : current);
+      setLimit(await readLimit(client));
+      void client.from("profiles").update({ last_seen_at: new Date().toISOString() }).eq("id", user.id);
+    } catch {
+      notify(t("syncFailed"));
+    }
+  }
+
+  function signedOut() {
+    identityRevision.current += 1;
+    setSession((current) => ({ ...current, user: null }));
+    setLimit(null);
+    // The lists belong to the account now; a shared computer should not keep them after signing out.
+    setSaved({ places: [], flights: [], route: [], visited: [] });
+    if (plan?.mode === "ai") settlePlan(true);
+  }
+
   useEffect(() => {
     const controller = new AbortController();
     const revision = identityRevision.current;
+    let unsubscribe: (() => void) | undefined;
     async function loadSession() {
       let loaded = await api("session", undefined, controller.signal);
       if (controller.signal.aborted || revision !== identityRevision.current) return;
+      if (loaded.mode === "supabase" && loaded.supabase) {
+        const client = startSupabase(loaded.supabase);
+        setSession({ ...loaded, user: null });
+        // Back from an e-mail link: ?reset=1 opens the new-password page, ?confirmed=1 says the address is confirmed.
+        const params = new URLSearchParams(location.search);
+        const returnPage = (() => { try { const value = sessionStorage.getItem("astratravel.signin-page"); sessionStorage.removeItem("astratravel.signin-page"); return value; } catch { return null; } })();
+        if (params.has("reset")) location.hash = "reset";
+        else if (returnPage && !location.hash && (otherPages.includes(returnPage as Page) || (pages as string[]).includes(returnPage))) location.hash = returnPage;
+        if (params.has("confirmed")) notify(t("emailConfirmed"));
+        const { data } = await client.auth.getSession();
+        if (params.has("reset") || params.has("confirmed") || params.has("code")) history.replaceState(null, "", location.pathname + location.hash);
+        sessionUser.current = data.session?.user?.id ?? null;
+        if (data.session?.user) void signedInAs(data.session.user);
+        const { data: listener } = client.auth.onAuthStateChange((event, next) => {
+          if (event === "SIGNED_OUT") signedOut();
+          else if (event === "PASSWORD_RECOVERY") location.hash = "reset";
+          else if (event === "SIGNED_IN" && next?.user && next.user.id !== sessionUser.current) {
+            notify(t("signedIn"));
+            setModal((shown) => shown?.kind === "account" ? null : shown);
+            void signedInAs(next.user);
+          }
+          sessionUser.current = next?.user?.id ?? null;
+        });
+        unsubscribe = () => listener.subscription.unsubscribe();
+        void refreshSettings();
+        void loadCatalog(client).then((changed) => { if (changed) setCatalogVersion((value) => value + 1); });
+        return;
+      }
       if (loaded.mode === "sites" && loaded.canActivate && !loaded.user) {
         let returnPage: string | null = null;
         try {
@@ -95,8 +187,8 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
       setSession(loaded);
     }
     void loadSession().catch(() => {});
-    return () => controller.abort();
-  }, [api]);
+    return () => { controller.abort(); unsubscribe?.(); };
+  }, [api]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     function navigate() {
@@ -185,6 +277,9 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
     const apply = () => {
       setPreferences(next);
       saveLocal("profile", next);
+      // Signed in: the account remembers the settings too (language, country, guest or local, district, city).
+      const client = supabaseClient();
+      if (client && session.user?.id) void savePreferences(client, session.user.id, next).then(({ error }) => { if (error) notify(t("syncFailed")); });
     };
     if (next.language !== preferences.language) crossfade(apply);
     else apply();
@@ -233,12 +328,10 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
   /** AI notes come from the server and need a signed-in account. */
   async function buildAiPlan() {
     if (pendingPlan.current) return;
-    let signedIn = session;
+    // AI notes need an account: guests get the sign-in dialog (Supabase or the Sites host).
     if (!session.user) {
-      // One tap for guests: sign in to the demo account and carry on (the server's sign-in flow keeps its own dialog).
-      if (session.mode === "sites") return setModal({ kind: "account" });
-      try { signedIn = await api("demo", {}); changeSession(signedIn); }
-      catch (error) { return setPlanIssue(error instanceof Error ? error : new Error("request_error")); }
+      if (session.mode === "supabase" || session.mode === "sites") return setModal({ kind: "account" });
+      return setPlanIssue(new Error("unauthorized"));
     }
     setPlanning(true);
     setPlanIssue(null);
@@ -286,16 +379,35 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
     transition.finished.finally(() => { picture.style.viewTransitionName = ""; });
   }
 
+  /**
+   * Changes the visitor's lists at once (optimistic). Signed in, the change is written to the account right away;
+   * if that fails, the lists go back to how they were and the visitor is told.
+   */
+  function commitSaved(change: (previous: Saved) => Saved) {
+    const before = savedRef.current;
+    const after = change(before);
+    if (after === before) return;
+    savedRef.current = after;
+    setSaved(after);
+    const client = supabaseClient();
+    const uid = session.user?.id;
+    if (!client || !uid) return;
+    void writeChange(client, uid, before, after).catch(() => {
+      setSaved((current) => current === after ? before : current);
+      notify(t("syncFailed"));
+    });
+  }
+
   function togglePlace(place: Place) {
     const selected = saved.places.includes(place.id);
-    setSaved((previous) => ({ ...previous, places: selected
+    commitSaved((previous) => ({ ...previous, places: selected
       ? previous.places.filter((id) => id !== place.id) : [...previous.places, place.id] }));
     notify(t(selected ? "removed" : "added"), selected ? undefined : "#saved", t("openSaved"));
   }
 
   function toggleFlight(flight: Flight) {
     const selected = saved.flights.some(({ key }) => key === flight.key);
-    setSaved((previous) => ({ ...previous, flights: selected
+    commitSaved((previous) => ({ ...previous, flights: selected
       ? previous.flights.filter(({ key }) => key !== flight.key)
       : [...previous.flights, { key: flight.key, search: flight.search }] }));
     notify(t(selected ? "removed" : "added"));
@@ -303,12 +415,12 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
 
   function toggleRoute(place: Place) {
     const selected = saved.route.includes(place.id);
-    setSaved((previous) => ({ ...previous, route: selected ? previous.route.filter((id) => id !== place.id) : [...previous.route, place.id] }));
+    commitSaved((previous) => ({ ...previous, route: selected ? previous.route.filter((id) => id !== place.id) : [...previous.route, place.id] }));
     notify(t(selected ? "removedFromRoute" : "addedToRoute"), selected ? undefined : "#planner", t("openRoute"));
   }
 
   function moveRoute(id: string, step: -1 | 1) {
-    setSaved((previous) => {
+    commitSaved((previous) => {
       const route = [...previous.route];
       const from = route.indexOf(id);
       const to = from + step;
@@ -320,7 +432,7 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
 
   function toggleVisited(place: Place) {
     const selected = saved.visited.includes(place.id);
-    setSaved((previous) => ({ ...previous, visited: selected ? previous.visited.filter((id) => id !== place.id) : [...previous.visited, place.id] }));
+    commitSaved((previous) => ({ ...previous, visited: selected ? previous.visited.filter((id) => id !== place.id) : [...previous.visited, place.id] }));
     notify(t(selected ? "unmarkedVisited" : "markedVisited"));
   }
 
@@ -346,6 +458,7 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
       document.getElementById("main")?.focus();
     }}>{t("skip")}</a>
     <Header page={page} signedIn={Boolean(session.user)} theme={theme} onTheme={changeTheme} />
+    {appSettings.banner && <div className="shell site-banner glass" role="status"><Icon name="info" size={17} /><span>{appSettings.banner}</span></div>}
     <main className="shell main-shell" id="main" tabIndex={-1}>
       <AnimatePresence mode="wait" initial={false}>
         <m.div key={page} className="page" {...fade}>
@@ -355,7 +468,14 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
           {page === "saved" && <SavedPage />}
           {page === "planner" && <PlannerPage signedIn={Boolean(session.user)} inputs={inputs} onInput={setInputs}
             plan={plan} planning={planning} issue={planIssue} aiPending={aiPending} aiAvailable={session.ai !== false} onPlan={buildPlan} onAiPlan={() => void buildAiPlan()}
-            start={districtByKey[preferences.district]} />}
+            start={districtByKey[preferences.district]} onAsk={() => askAstra({ cityId: tripCity(preferences), route: saved.route })} />}
+          {page === "assistant" && <AssistantPage session={session} limit={limit ?? (session.user ? null : { left: appSettings.aiLimit, limit: appSettings.aiLimit, resetsAt: "", enabled: true, blocked: false })}
+            onLimit={setLimit} onSignIn={() => setModal({ kind: "account" })} />}
+          {page === "account" && <AccountPage session={session} limit={limit} onSignIn={() => setModal({ kind: "account" })} onSignedOut={signedOut}
+            onProfileName={(name) => setSession((current) => current.user ? { ...current, user: { ...current.user, displayName: name || null } } : current)} />}
+          {page === "reset" && <ResetPage signedIn={Boolean(session.user)} />}
+          {page === "admin" && <AdminPage session={session} onSettings={() => void refreshSettings()} />}
+          {(page === "privacy" || page === "terms") && <LegalPage kind={page} />}
         </m.div>
       </AnimatePresence>
     </main>
@@ -367,7 +487,8 @@ export function App({ api = fetchApi, assets, offline = false }: { api?: Api; as
         const bounds = event.currentTarget.getBoundingClientRect();
         if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) setModal(null);
       }}>
-      {modal && <DialogContent modal={modal} page={page} api={api} session={session} onSession={changeSession} onClose={() => setModal(null)} />}
+      {modal && <DialogContent modal={modal} page={page} api={api} session={session} onSession={(next) => next.user ? changeSession(next) : (signedOut(), setModal(null))}
+        onClose={() => setModal(null)} aiLimit={appSettings.aiLimit} registrationOpen={appSettings.registrationOpen} />}
     </dialog>
     <div className="toast-region" role="status" aria-live="polite">
       <AnimatePresence>

@@ -9,15 +9,17 @@ import { spring } from "../shared/motion";
 import { creditOf, GlassIcon, Icon } from "../shared/ui";
 
 /** What the one <dialog> of the app shows. */
-export function DialogContent({ modal, page, api, session, onSession, onClose }: {
+export function DialogContent({ modal, page, api, session, onSession, onClose, aiLimit, registrationOpen }: {
   modal: Modal; page: Page; api: Api; session: Session; onSession: (session: Session) => void; onClose: () => void;
+  aiLimit: number; registrationOpen: boolean;
 }) {
   const { t } = useTravel();
   return <>
     <button className="icon-button dialog-close" type="button" aria-label={t("close")} onClick={onClose}><Icon name="x" /></button>
     {modal.kind === "place" && <PlaceDetail place={modal.place} />}
     {modal.kind === "flight" && <FlightDetail flight={modal.flight} />}
-    {modal.kind === "account" && <Account session={session} api={api} page={page} onChange={onSession} />}
+    {modal.kind === "account" && <Account session={session} api={api} page={page} onChange={onSession} onClose={onClose}
+      aiLimit={aiLimit} registrationOpen={registrationOpen} />}
     {modal.kind === "profile" && <LanguageDialog onClose={onClose} />}
     {modal.kind === "credits" && <CreditsDialog />}
   </>;

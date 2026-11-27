@@ -26,8 +26,9 @@ export function Navigation({ page, mobile = false }: { page: Page; mobile?: bool
     { label: t("saved"), href: "#saved", icon: NimbusIcons.heart, fx: "pop" as const },
     { label: t("planner"), href: "#planner", icon: NimbusIcons.route, fx: "drop" as const },
   ];
-  const active = Math.max(0, pages.indexOf(page as Exclude<Page, "welcome">));
-  return <LiquidNavbar items={items} active={page === "welcome" ? -1 : active} tone={dark ? "dark" : "light"} label={t("navigation")}
+  // Pages outside the navbar (welcome, chat, account, admin…) leave the water drop out.
+  const active = pages.indexOf(page as Exclude<Page, "welcome">);
+  return <LiquidNavbar items={items} active={active} tone={dark ? "dark" : "light"} label={t("navigation")}
     compact={mobile ? true : undefined} className={mobile ? "mobile-nav" : "desktop-nav"} />;
 }
 
@@ -64,5 +65,6 @@ export function Footer() {
     <Brand />
     <p>{t("illustrative")}</p>
     <button type="button" className="text-link" onClick={() => open({ kind: "credits" })}><Icon name="camera" size={15} />{t("photoCredits")}</button>
+    <nav className="footer-links" aria-label={t("legal")}><a href="#assistant">{t("assistant")}</a><a href="#privacy">{t("privacy")}</a><a href="#terms">{t("terms")}</a></nav>
   </div></footer>;
 }
