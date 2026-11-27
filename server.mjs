@@ -5,10 +5,12 @@ import { promisify } from "node:util";
 import { DatabaseSync } from "node:sqlite";
 import { resolve, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { tmpdir } from "node:os";
 import { addAiNotes, planRoute, validateRequest } from "./lib/planner.mjs";
 
 const root = dirname(fileURLToPath(import.meta.url));
-const dataDir = process.env.ASTRA_DATA_DIR || resolve(root, ".data");
+// On Vercel the code sits on a read-only disk; only the temp folder is writable (and it does not outlive the instance).
+const dataDir = process.env.ASTRA_DATA_DIR || (process.env.VERCEL ? resolve(tmpdir(), "astratravel") : resolve(root, ".data"));
 await mkdir(dataDir, { recursive: true, mode: 0o700 });
 const db = new DatabaseSync(resolve(dataDir, "astratravel.sqlite"));
 db.exec(`
@@ -167,7 +169,8 @@ async function api(request, response, path) {
   return json(response, 404, { error: "request_error" });
 }
 
-export const server = createServer(async (request, response) => {
+/** Handles one request: the API, plus the static files when the app runs as its own server. Vercel calls it through api/index.mjs. */
+export async function handle(request, response) {
   const path = new URL(request.url, "http://localhost").pathname;
   try {
     if (path.startsWith("/api/")) return await api(request, response, path);
@@ -187,7 +190,9 @@ export const server = createServer(async (request, response) => {
     if (!response.headersSent) return json(response, 500, { error: "request_error" });
     response.end();
   }
-});
+}
+
+export const server = createServer(handle);
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const portArg = process.argv.indexOf("--port");
   const hostArg = process.argv.indexOf("--host");
