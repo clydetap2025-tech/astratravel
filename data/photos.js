@@ -82,22 +82,22 @@ export const photoCredits = {
     "kind": "place"
   },
   "shymkent-dendropark": {
-    "file": "File:Shymkent_independence_square_in_2023.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Shymkent_independence_square_in_2023.jpg",
-    "author": "ほっきー",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Shymkent",
-    "kind": "city"
+    "file": "File:Шымкент,_дендропарк,_пруд_сверху.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%A8%D1%8B%D0%BC%D0%BA%D0%B5%D0%BD%D1%82,_%D0%B4%D0%B5%D0%BD%D0%B4%D1%80%D0%BE%D0%BF%D0%B0%D1%80%D0%BA,_%D0%BF%D1%80%D1%83%D0%B4_%D1%81%D0%B2%D0%B5%D1%80%D1%85%D1%83.jpg",
+    "author": "Nikolai Bulykin",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "article": "",
+    "kind": "place"
   },
   "independence-park-shymkent": {
-    "file": "File:Shymkent_independence_square_in_2023.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Shymkent_independence_square_in_2023.jpg",
-    "author": "ほっきー",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Shymkent",
-    "kind": "city"
+    "file": "File:Kazakhstan_Shymkent_Park_Nezavisimosti_1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Kazakhstan_Shymkent_Park_Nezavisimosti_1.jpg",
+    "author": "Eurovaran",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "article": "",
+    "kind": "place"
   },
   "sayram": {
     "file": "File:SayramSkyline.jpg",
@@ -136,13 +136,13 @@ export const photoCredits = {
     "kind": "place"
   },
   "karavansaray": {
-    "file": "File:Mausoleum_of_Khoja_Ahmed_Yasawi_in_Hazrat-e_Turkestan,_Kazakhstan.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Mausoleum_of_Khoja_Ahmed_Yasawi_in_Hazrat-e_Turkestan,_Kazakhstan.jpg",
-    "author": "Petar Milošević",
+    "file": "File:Turkestan_Karavan_Saray.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Turkestan_Karavan_Saray.jpg",
+    "author": "Yakov Fedorov",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Turkistan (city)",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "arystan-bab": {
     "file": "File:Aristanbab.jpg",
@@ -180,15 +180,6 @@ export const photoCredits = {
     "article": "ru:Мавзолей Карахана",
     "kind": "place"
   },
-  "ancient-taraz": {
-    "file": "File:Karakhan_Mausoleum.JPG",
-    "page": "https://commons.wikimedia.org/wiki/File:Karakhan_Mausoleum.JPG",
-    "author": "Yakov Fedorov",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Taraz",
-    "kind": "city"
-  },
   "aitbay-mosque": {
     "file": "File:Кызылорда,_мечеть_Айтбая_с_фасада.jpg",
     "page": "https://commons.wikimedia.org/wiki/File:%D0%9A%D1%8B%D0%B7%D1%8B%D0%BB%D0%BE%D1%80%D0%B4%D0%B0,_%D0%BC%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%90%D0%B9%D1%82%D0%B1%D0%B0%D1%8F_%D1%81_%D1%84%D0%B0%D1%81%D0%B0%D0%B4%D0%B0.jpg",
@@ -216,15 +207,6 @@ export const photoCredits = {
     "article": "en:Baikonur Cosmodrome",
     "kind": "place"
   },
-  "mig-monument": {
-    "file": "File:Aktau_panorama_at_day.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Aktau_panorama_at_day.jpg",
-    "author": "Vita86",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Aktau",
-    "kind": "city"
-  },
   "sherkala": {
     "file": "File:Sherqala.jpg",
     "page": "https://commons.wikimedia.org/wiki/File:Sherqala.jpg",
@@ -243,24 +225,6 @@ export const photoCredits = {
     "article": "en:Atyrau",
     "kind": "city"
   },
-  "imangali-mosque": {
-    "file": "File:Урал_река.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%A3%D1%80%D0%B0%D0%BB_%D1%80%D0%B5%D0%BA%D0%B0.jpg",
-    "author": "Zhanna Lorde",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Atyrau",
-    "kind": "city"
-  },
-  "aktobe-museum": {
-    "file": "File:St._Nicolas_Cathedral_Aktobe_and_Nur_Ghasyr_mosque.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:St._Nicolas_Cathedral_Aktobe_and_Nur_Ghasyr_mosque.jpg",
-    "author": "User:Mheidegger",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Aktobe",
-    "kind": "city"
-  },
   "ilek-embankment": {
     "file": "File:St._Nicolas_Cathedral_Aktobe_and_Nur_Ghasyr_mosque.jpg",
     "page": "https://commons.wikimedia.org/wiki/File:St._Nicolas_Cathedral_Aktobe_and_Nur_Ghasyr_mosque.jpg",
@@ -271,22 +235,22 @@ export const photoCredits = {
     "kind": "city"
   },
   "archangel-cathedral": {
-    "file": "File:ЗКГУ_-_Главный_корпус.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%97%D0%9A%D0%93%D0%A3_-_%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D1%8B%D0%B9_%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81.jpg",
-    "author": "ArsenG",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Oral, Kazakhstan",
-    "kind": "city"
+    "file": "File:Mihaylovskiy_Cathedral_(Uralsk).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Mihaylovskiy_Cathedral_(Uralsk).jpg",
+    "author": "arseng",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "article": "",
+    "kind": "place"
   },
   "pugachev-museum": {
-    "file": "File:ЗКГУ_-_Главный_корпус.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%97%D0%9A%D0%93%D0%A3_-_%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D1%8B%D0%B9_%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81.jpg",
-    "author": "ArsenG",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Oral, Kazakhstan",
-    "kind": "city"
+    "file": "File:Дом-музей_Емельяна_Пугачева_-_panoramio_(12).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%94%D0%BE%D0%BC-%D0%BC%D1%83%D0%B7%D0%B5%D0%B9_%D0%95%D0%BC%D0%B5%D0%BB%D1%8C%D1%8F%D0%BD%D0%B0_%D0%9F%D1%83%D0%B3%D0%B0%D1%87%D0%B5%D0%B2%D0%B0_-_panoramio_(12).jpg",
+    "author": "Uralsk Review",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "article": "",
+    "kind": "place"
   },
   "oral-embankment": {
     "file": "File:ЗКГУ_-_Главный_корпус.jpg",
@@ -298,22 +262,22 @@ export const photoCredits = {
     "kind": "city"
   },
   "karaganda-park": {
-    "file": "File:Г._Караганда._Дворец_культуры_горняков_проспект_Б-Жирау_(ранее_пр.Советский).jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%93._%D0%9A%D0%B0%D1%80%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B0._%D0%94%D0%B2%D0%BE%D1%80%D0%B5%D1%86_%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D1%8B_%D0%B3%D0%BE%D1%80%D0%BD%D1%8F%D0%BA%D0%BE%D0%B2_%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82_%D0%91-%D0%96%D0%B8%D1%80%D0%B0%D1%83_(%D1%80%D0%B0%D0%BD%D0%B5%D0%B5_%D0%BF%D1%80.%D0%A1%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B8%D0%B9).jpg",
-    "author": "Grin1372Go",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Karaganda",
-    "kind": "city"
+    "file": "File:Караганда,_рыбак_в_ЦПКиО_(1).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%9A%D0%B0%D1%80%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B0,_%D1%80%D1%8B%D0%B1%D0%B0%D0%BA_%D0%B2_%D0%A6%D0%9F%D0%9A%D0%B8%D0%9E_(1).jpg",
+    "author": "Nikolai Bulykin",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "article": "",
+    "kind": "place"
   },
   "miners-glory": {
-    "file": "File:Г._Караганда._Дворец_культуры_горняков_проспект_Б-Жирау_(ранее_пр.Советский).jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%93._%D0%9A%D0%B0%D1%80%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B0._%D0%94%D0%B2%D0%BE%D1%80%D0%B5%D1%86_%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D1%8B_%D0%B3%D0%BE%D1%80%D0%BD%D1%8F%D0%BA%D0%BE%D0%B2_%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82_%D0%91-%D0%96%D0%B8%D1%80%D0%B0%D1%83_(%D1%80%D0%B0%D0%BD%D0%B5%D0%B5_%D0%BF%D1%80.%D0%A1%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B8%D0%B9).jpg",
-    "author": "Grin1372Go",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Karaganda",
-    "kind": "city"
+    "file": "File:Miners'_Glory_Monument.png",
+    "page": "https://commons.wikimedia.org/wiki/File:Miners%27_Glory_Monument.png",
+    "author": "Quarot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "article": "",
+    "kind": "place"
   },
   "karkaraly": {
     "file": "File:Каркаралы,_Karkaraly_National_Park,_Kazakhstan.jpg",
@@ -377,15 +341,6 @@ export const photoCredits = {
     "licenseUrl": "",
     "article": "en:Bayanaul National Park",
     "kind": "place"
-  },
-  "oskemen-ethnopark": {
-    "file": "File:Панорама_города_Усть-Каменогорск.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%BD%D0%BE%D1%80%D0%B0%D0%BC%D0%B0_%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%B0_%D0%A3%D1%81%D1%82%D1%8C-%D0%9A%D0%B0%D0%BC%D0%B5%D0%BD%D0%BE%D0%B3%D0%BE%D1%80%D1%81%D0%BA.jpg",
-    "author": "Andriej Szypiłow",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Oskemen",
-    "kind": "city"
   },
   "oskemen-embankment": {
     "file": "File:Панорама_города_Усть-Каменогорск.jpg",
@@ -474,8 +429,8 @@ export const photoCredits = {
     "author": "Zhanna Lorde",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Atyrau",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "pavlodar-embankment": {
     "file": "File:Вид_на_центральную_набережную_города_Павлодара.jpg",
@@ -483,8 +438,8 @@ export const photoCredits = {
     "author": "Djenalinov",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Pavlodar",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "kiin-kerish": {
     "file": "File:Урочище_Киин-Кериш.jpg",
@@ -495,32 +450,23 @@ export const photoCredits = {
     "article": "ru:Киин-Кериш",
     "kind": "place"
   },
-  "kostanay-museum": {
-    "file": "File:Rustam_Minnikhanov_in_Kostanay_(2017-07-07)_01.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Rustam_Minnikhanov_in_Kostanay_(2017-07-07)_01.jpg",
-    "author": "Марсель Бадыкшин",
-    "license": "CC BY 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
-    "article": "en:Kostanay",
-    "kind": "city"
-  },
   "tamgaly": {
-    "file": "File:Осеннее_Иссыкское_озеро.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%9E%D1%81%D0%B5%D0%BD%D0%BD%D0%B5%D0%B5_%D0%98%D1%81%D1%81%D1%8B%D0%BA%D1%81%D0%BA%D0%BE%D0%B5_%D0%BE%D0%B7%D0%B5%D1%80%D0%BE.jpg",
-    "author": "Timas38",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Almaty Region",
-    "kind": "city"
+    "file": "File:Tanbaly.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Tanbaly.jpg",
+    "author": "Jonas Satkauskas",
+    "license": "Attribution",
+    "licenseUrl": "",
+    "article": "",
+    "kind": "place"
   },
   "baiterek": {
-    "file": "File:Astana_Esil_view.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Astana_Esil_view.jpg",
-    "author": "Dauren Nabijan",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Astana",
-    "kind": "city"
+    "file": "File:Night_at_Esil_District,_Astana_(P1190721).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Night_at_Esil_District,_Astana_(P1190721).jpg",
+    "author": "Matti Blume",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "article": "",
+    "kind": "place"
   },
   "khan-shatyr": {
     "file": "File:Astana_Esil_view.jpg",
@@ -532,121 +478,112 @@ export const photoCredits = {
     "kind": "city"
   },
   "hazrat-sultan": {
-    "file": "File:Astana_Esil_view.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Astana_Esil_view.jpg",
-    "author": "Dauren Nabijan",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Astana",
-    "kind": "city"
+    "file": "File:Астана,_Мечеть_Хазрет_Султан_-_panoramio_(1).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%90%D1%81%D1%82%D0%B0%D0%BD%D0%B0,_%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%A5%D0%B0%D0%B7%D1%80%D0%B5%D1%82_%D0%A1%D1%83%D0%BB%D1%82%D0%B0%D0%BD_-_panoramio_(1).jpg",
+    "author": "Сергей Марцынюк",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "article": "",
+    "kind": "place"
   },
   "peace-palace": {
-    "file": "File:Astana_Esil_view.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Astana_Esil_view.jpg",
-    "author": "Dauren Nabijan",
+    "file": "File:Palace_of_Peace_and_Reconciliation_(pyramid).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Palace_of_Peace_and_Reconciliation_(pyramid).jpg",
+    "author": "Nikolamikovic82",
     "license": "CC0",
     "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Astana",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "nur-alem": {
-    "file": "File:Astana_Esil_view.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Astana_Esil_view.jpg",
-    "author": "Dauren Nabijan",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Astana",
-    "kind": "city"
-  },
-  "national-museum": {
-    "file": "File:Astana_Esil_view.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Astana_Esil_view.jpg",
-    "author": "Dauren Nabijan",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Astana",
-    "kind": "city"
+    "file": "File:Павильон_Нур_Алем.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BE%D0%BD_%D0%9D%D1%83%D1%80_%D0%90%D0%BB%D0%B5%D0%BC.jpg",
+    "author": "Шалкер Гам",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "article": "",
+    "kind": "place"
   },
   "astana-opera": {
-    "file": "File:Astana_Esil_view.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Astana_Esil_view.jpg",
-    "author": "Dauren Nabijan",
+    "file": "File:The_State_Opera_and_Ballet_Theatre_“Astana_Opera”.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:The_State_Opera_and_Ballet_Theatre_%E2%80%9CAstana_Opera%E2%80%9D.jpg",
+    "author": "Nikolamikovic82",
     "license": "CC0",
     "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "article": "en:Astana",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "aisha-bibi": {
-    "file": "File:Karakhan_Mausoleum.JPG",
-    "page": "https://commons.wikimedia.org/wiki/File:Karakhan_Mausoleum.JPG",
-    "author": "Yakov Fedorov",
+    "file": "File:Aisha_bibi.png",
+    "page": "https://commons.wikimedia.org/wiki/File:Aisha_bibi.png",
+    "author": "Lamassu Design Gurdjieff",
     "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Taraz",
-    "kind": "city"
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "article": "",
+    "kind": "place"
   },
   "babaji-khatun": {
-    "file": "File:Karakhan_Mausoleum.JPG",
-    "page": "https://commons.wikimedia.org/wiki/File:Karakhan_Mausoleum.JPG",
-    "author": "Yakov Fedorov",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Taraz",
-    "kind": "city"
+    "file": "File:Babazhi_Khatun_Mausoleum.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Babazhi_Khatun_Mausoleum.JPG",
+    "author": "Stomac",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "article": "",
+    "kind": "place"
   },
   "korkyt-ata": {
-    "file": "File:Kazakhstan_Qyzylorda_Central_square.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Kazakhstan_Qyzylorda_Central_square.jpg",
-    "author": "Eurovaran",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Kyzylorda",
-    "kind": "city"
-  },
-  "shakpak-ata": {
-    "file": "File:Некрополь_Бекет-Ата.JPG",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%9D%D0%B5%D0%BA%D1%80%D0%BE%D0%BF%D0%BE%D0%BB%D1%8C_%D0%91%D0%B5%D0%BA%D0%B5%D1%82-%D0%90%D1%82%D0%B0.JPG",
-    "author": "Adaykz",
+    "file": "File:KorkytAta_Memorial_Karmakshi_03.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:KorkytAta_Memorial_Karmakshi_03.jpg",
+    "author": "Yuriy75",
     "license": "CC BY-SA 3.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Mangyshlak Peninsula",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
-  "bozzhyra": {
-    "file": "File:Ustjurt-plateau_(6593022525).jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Ustjurt-plateau_(6593022525).jpg",
-    "author": "Daniel Hug",
-    "license": "CC BY 2.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-    "article": "en:Ustyurt Plateau",
-    "kind": "city"
-  },
-  "saraishyk": {
-    "file": "File:Урал_река.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%A3%D1%80%D0%B0%D0%BB_%D1%80%D0%B5%D0%BA%D0%B0.jpg",
-    "author": "Zhanna Lorde",
+  "shakpak-ata": {
+    "file": "File:Shakpak-Ata_outside.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Shakpak-Ata_outside.jpg",
+    "author": "Ananari",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Atyrau",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
+  },
+  "bozzhyra": {
+    "file": "File:Bozzhyra_valley,_Mangistau,_Kazakhstan.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Bozzhyra_valley,_Mangistau,_Kazakhstan.jpg",
+    "author": "Berik Aday",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "article": "",
+    "kind": "place"
+  },
+  "saraishyk": {
+    "file": "File:Сарайшық_сапар_орталығы.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%A1%D0%B0%D1%80%D0%B0%D0%B9%D1%88%D1%8B%D2%9B_%D1%81%D0%B0%D0%BF%D0%B0%D1%80_%D0%BE%D1%80%D1%82%D0%B0%D0%BB%D1%8B%D2%93%D1%8B.jpg",
+    "author": "AnainaLee",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "article": "",
+    "kind": "place"
   },
   "nur-gasyr": {
     "file": "File:St._Nicolas_Cathedral_Aktobe_and_Nur_Ghasyr_mosque.jpg",
     "page": "https://commons.wikimedia.org/wiki/File:St._Nicolas_Cathedral_Aktobe_and_Nur_Ghasyr_mosque.jpg",
-    "author": "User:Mheidegger",
+    "author": "Mheidegger",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Aktobe",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "karlag-museum": {
-    "file": "File:Г._Караганда._Дворец_культуры_горняков_проспект_Б-Жирау_(ранее_пр.Советский).jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%93._%D0%9A%D0%B0%D1%80%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B0._%D0%94%D0%B2%D0%BE%D1%80%D0%B5%D1%86_%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D1%8B_%D0%B3%D0%BE%D1%80%D0%BD%D1%8F%D0%BA%D0%BE%D0%B2_%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82_%D0%91-%D0%96%D0%B8%D1%80%D0%B0%D1%83_(%D1%80%D0%B0%D0%BD%D0%B5%D0%B5_%D0%BF%D1%80.%D0%A1%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B8%D0%B9).jpg",
-    "author": "Grin1372Go",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Karaganda",
-    "kind": "city"
+    "file": "File:Dolinka_Museum_1.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Dolinka_Museum_1.JPG",
+    "author": "Yakov Fedorov",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "article": "",
+    "kind": "place"
   },
   "okzhetpes": {
     "file": "File:Окжетпес_Боровое.jpg",
@@ -654,62 +591,53 @@ export const photoCredits = {
     "author": "Dots foto",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Burabay National Park",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "mashkhur-zhusup": {
-    "file": "File:Вид_на_центральную_набережную_города_Павлодара.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%92%D0%B8%D0%B4_%D0%BD%D0%B0_%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%83%D1%8E_%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D1%83%D1%8E_%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%B0_%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE%D0%B4%D0%B0%D1%80%D0%B0.jpg",
-    "author": "Djenalinov",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "article": "en:Pavlodar",
-    "kind": "city"
-  },
-  "sibiny": {
-    "file": "File:Панорама_города_Усть-Каменогорск.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%BD%D0%BE%D1%80%D0%B0%D0%BC%D0%B0_%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%B0_%D0%A3%D1%81%D1%82%D1%8C-%D0%9A%D0%B0%D0%BC%D0%B5%D0%BD%D0%BE%D0%B3%D0%BE%D1%80%D1%81%D0%BA.jpg",
-    "author": "Andriej Szypiłow",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "en:Oskemen",
-    "kind": "city"
+    "file": "File:Mashkhur-Zhusup_Mosque.png",
+    "page": "https://commons.wikimedia.org/wiki/File:Mashkhur-Zhusup_Mosque.png",
+    "author": "Talim TV",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "article": "",
+    "kind": "place"
   },
   "abai-museum": {
-    "file": "File:Semey_-_panoramio.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Semey_-_panoramio.jpg",
-    "author": "Ilya Plekhanov",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "ru:Семей",
-    "kind": "city"
+    "file": "File:Семей_қаласындағы_Абай_музей-үйі.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%A1%D0%B5%D0%BC%D0%B5%D0%B9_%D2%9B%D0%B0%D0%BB%D0%B0%D1%81%D1%8B%D0%BD%D0%B4%D0%B0%D2%93%D1%8B_%D0%90%D0%B1%D0%B0%D0%B9_%D0%BC%D1%83%D0%B7%D0%B5%D0%B9-%D2%AF%D0%B9%D1%96.jpg",
+    "author": "Музей Абая \"Жидебай-Бөрілі\"",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "article": "",
+    "kind": "place"
   },
   "dostoevsky-museum": {
-    "file": "File:Semey_-_panoramio.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Semey_-_panoramio.jpg",
-    "author": "Ilya Plekhanov",
+    "file": "File:Dostoevsky_House_in_Semey.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Dostoevsky_House_in_Semey.JPG",
+    "author": "Yakov Fedorov",
     "license": "CC BY-SA 3.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "ru:Семей",
-    "kind": "city"
+    "article": "",
+    "kind": "place"
   },
   "stronger-than-death": {
-    "file": "File:Semey_-_panoramio.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Semey_-_panoramio.jpg",
-    "author": "Ilya Plekhanov",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "ru:Семей",
-    "kind": "city"
+    "file": "File:Мемориал_\"Сильнее_смерти\"-воздвигнут_жертвам_ядерных_испытаний_-_panoramio.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:%D0%9C%D0%B5%D0%BC%D0%BE%D1%80%D0%B8%D0%B0%D0%BB_%22%D0%A1%D0%B8%D0%BB%D1%8C%D0%BD%D0%B5%D0%B5_%D1%81%D0%BC%D0%B5%D1%80%D1%82%D0%B8%22-%D0%B2%D0%BE%D0%B7%D0%B4%D0%B2%D0%B8%D0%B3%D0%BD%D1%83%D1%82_%D0%B6%D0%B5%D1%80%D1%82%D0%B2%D0%B0%D0%BC_%D1%8F%D0%B4%D0%B5%D1%80%D0%BD%D1%8B%D1%85_%D0%B8%D1%81%D0%BF%D1%8B%D1%82%D0%B0%D0%BD%D0%B8%D0%B9_-_panoramio.jpg",
+    "author": "Иван Быков",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "article": "",
+    "kind": "place"
   },
   "semey-bridge": {
-    "file": "File:Semey_-_panoramio.jpg",
-    "page": "https://commons.wikimedia.org/wiki/File:Semey_-_panoramio.jpg",
-    "author": "Ilya Plekhanov",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "article": "ru:Семей",
-    "kind": "city"
+    "file": "File:Semipalatinsk_Bridge.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Semipalatinsk_Bridge.jpg",
+    "author": "Geevee",
+    "license": "CC BY 2.5",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+    "article": "",
+    "kind": "place"
   },
   "zhidebay": {
     "file": "File:Semey_-_panoramio.jpg",
